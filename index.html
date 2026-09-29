@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#304f40">
+  <title>Rex & Trisha | Wedding Invitation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Allura&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/global.css">
+  <link rel="stylesheet" href="./css/intro.css">
+  <link rel="stylesheet" href="./css/invitation.css">
+  <link rel="stylesheet" href="./css/dress-code.css">
+  <link rel="stylesheet" href="./css/rsvp.css">
+</head>
+<body class="is-locked">
+  <div class="intro" id="intro">
+    <button class="intro__trigger" id="introTrigger" type="button" aria-label="Open wedding invitation">
+      <div class="envelope">
+        <div class="envelope__back"></div>
+        <div class="envelope__paper">
+          <span>R & T</span>
+        </div>
+        <div class="envelope__left"></div>
+        <div class="envelope__right"></div>
+        <div class="envelope__bottom"></div>
+        <div class="envelope__flap"></div>
+        <div class="envelope__seal"></div>
+      </div>
+    </button>
+  </div>
+
+  <main id="weddingPage" class="wedding-page">
+    <div id="invitationSection"></div>
+    <div id="dressCodeSection"></div>
+    <div id="rsvpSection"></div>
+  </main>
+
+  <audio id="weddingAudio" loop preload="auto">
+    <source src="./assets/wedding-song.mp3" type="audio/mpeg">
+  </audio>
+
+  <script src="./js/main.js" defer></script>
+  <script src="./js/invitation.js" defer></script>
+  <script type="module" src="./js/rsvp.js"></script>
+</body>
+</html>

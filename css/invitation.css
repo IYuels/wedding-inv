@@ -1,0 +1,304 @@
+.invitation {
+  position: relative;
+  overflow: hidden;
+  background-color: #FFFDFA;
+  background-image: url("../assets/invitation-bg-image.webp");
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+}
+
+.invitation__container {
+  position: relative;
+  z-index: 2;
+  max-width: 1528px;
+  width: 100%;
+  padding: 50px;
+  min-height: 500px;
+  margin: 0 auto;
+}
+
+.invitation__main {
+  position: relative;
+  width: 100%;
+}
+
+.invitation__paper {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  z-index: 2;
+  max-width: 460px;
+  width: 100%;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url("../assets/paper-border.webp");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  transform: translateX(-50%);
+}
+
+.invitation__paper-content {
+  position: relative;
+  z-index: 4;
+  width: 100%;
+  text-align: center;
+}
+
+.invitation__eyebrow {
+  margin-bottom: 18px;
+  font-family: var(--serif-font);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.96px;
+}
+
+.invitation__names {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+  color: var(--green);
+  font-family: var(--heading-font);
+  font-size: 72px;
+  font-weight: 400;
+  line-height: 0.7;
+}
+
+.invitation__names small {
+  margin: 10px 0;
+  font-family: var(--heading-font);
+  font-size: 40px;
+  font-weight: 400;
+}
+
+.invitation__flower {
+  position: absolute;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.invitation__flower img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.invitation__flower--disc {
+  left: -100px;
+  bottom: 0px;
+  width: 150px;
+  transform: rotate(-90deg);
+}
+
+.invitation__flower--plate {
+  top: -70px;
+  right: -130px;
+  width: 250px;
+  transform: rotate(-40deg);
+}
+
+.music-disc {
+  position: absolute;
+  left: -80px;
+  bottom: -80px;
+  z-index: 5;
+  max-width: 150px;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  border: none;
+  padding: 0;
+  background: transparent;
+}
+
+.music-disc__record {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: disc-spin 8s linear infinite;
+  animation-play-state: running;
+}
+
+.music-disc.is-paused .music-disc__record {
+  animation-play-state: paused;
+}
+
+@keyframes disc-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.invitation__rings {
+  position: absolute;
+  z-index: 7;
+  left: 50%;
+  bottom: -100px;
+  max-width: 200px;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+.invitation__rings img {
+  width: 100%;
+  height: auto;
+}
+
+.invitation__plate {
+  position: absolute;
+  top: -3px;
+  right: -200px;
+  z-index: 4;
+  max-width: 350px;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url("../assets/plate.webp");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.invitation__plate-content {
+  display: flex;
+  flex-direction: column;
+  color: var(--green);
+  font-family: var(--sans-font);
+  font-size: 40px;
+  line-height: 110%;
+  letter-spacing: 2.88px;
+  text-align: center;
+  font-style: normal;
+}
+
+.countdown {
+  position: relative;
+  z-index: 4;
+  padding-block: 20px;
+  background: #eee8d8;
+  color: #4A6253;
+  text-align: center;
+}
+
+.countdown > p {
+  margin-bottom: 7px;
+  font-family: var(--sans-font);
+  font-size: 32px;
+}
+
+.countdown__numbers {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 5px;
+}
+
+.countdown__numbers div {
+  display: flex;
+  flex-direction: column;
+}
+
+.countdown__numbers strong {
+  font-family: var(--serif-font);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.countdown__numbers span {
+  font-size: 18px;
+  font-family: var(--serif-font);
+}
+
+@media (max-width: 991px) {
+  .invitation__container {
+    max-width: 100%;
+    padding-inline: 10px;
+    min-height: 450px;
+  }
+
+  .invitation__paper {
+    top: 0;
+    max-width: 250px;
+    padding: 40px 0;
+    background-size: 100% 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+
+  .music-disc {
+    left: -40px;
+    bottom: -35px;
+    max-width: 110px;
+    height: auto;
+    min-height: unset;
+  }
+
+  .invitation__flower--disc {
+    left: -50px;
+    bottom: 20px;
+    width: 100px;
+    transform: rotate(-90deg);
+  }
+
+  .invitation__rings {
+    width: 130px;
+    top: -55px;
+    bottom: unset;
+  }
+
+  .invitation__plate {
+    max-width: 150px;
+    right: -40px;
+    bottom: -75px;
+    top: unset;
+  }
+
+  .invitation__flower--plate {
+    top: auto;
+    right: -40px;
+    bottom: 30px;
+    width: 100px;
+    transform: rotate(-30deg);
+  }
+
+  .invitation__plate-content {
+    font-size: 20px;
+    letter-spacing: normal;
+    font-weight: 500;
+  }
+
+  .invitation__names {
+    font-size: 62px;
+  }
+
+  .invitation__names small {
+    font-size: 52px;
+  }
+
+  .invitation__eyebrow {
+    font-size: 13px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+  }
+
+  .invitation__paper-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .countdown {
+    padding: 10px;
+  }
+  .countdown > p {
+    line-height: normal;
+  }
+}

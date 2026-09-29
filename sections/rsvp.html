@@ -1,0 +1,73 @@
+<section class="rsvp section" id="rsvp">
+  <div class="page-container rsvp__container">
+    <div class="rsvp-card">
+      <div class="rsvp-card__content">
+        <h2 class="section-title">
+          RSVP
+        </h2>
+
+        <p class="rsvp-card__intro">
+          We would be honored to have you as one of our godparents. Your presence, guidance, and blessing would mean so much to us as we begin this new chapter together.
+        </p>
+
+        <form class="rsvp-form" id="rsvpForm">
+          <div class="form-field">
+            <label for="godparentRole">Role</label>
+
+            <select id="godparentRole" name="role" required>
+              <option value="">Select your role</option>
+              <option value="Godfather">Godfather</option>
+              <option value="Godmother">Godmother</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="guestName">Name</label>
+
+            <input
+              type="text"
+              id="guestName"
+              name="name"
+              placeholder="Your full name"
+              required
+            >
+          </div>
+
+          <fieldset class="attendance-field">
+            <legend>Will you be attending?</legend>
+
+            <label>
+              <input
+                type="radio"
+                name="attendance"
+                value="Attending"
+                required
+              >
+              <span>Joyfully accepts</span>
+            </label>
+
+            <label>
+              <input
+                type="radio"
+                name="attendance"
+                value="Not attending"
+                required
+              >
+              <span>Regretfully declines</span>
+            </label>
+          </fieldset>
+
+          <button type="submit" class="button">
+            Submit RSVP
+          </button>
+
+          <p
+            class="rsvp-form__message"
+            id="rsvpMessage"
+            aria-live="polite"
+          ></p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,220 @@
+.rsvp {
+  min-height: 850px;
+  overflow: hidden;
+  background: var(--green-dark);
+  background-image: url("../assets/rsvp-leaves.webp");
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.rsvp__container {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  min-height: 850px;
+  align-items: center;
+  justify-content: center;
+  padding-top: 70px;
+  padding-bottom: 70px;
+}
+
+.rsvp-card {
+  width: min(650px, 100%);
+  min-height: 740px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 120px;
+  background: url("../assets/rsvp-frame.webp") center/100% 100% no-repeat;
+}
+
+.rsvp-card__content {
+  width: min(430px, 100%);
+  text-align: center;
+}
+
+.rsvp-card__intro {
+  margin-bottom: 20px;
+  font-size: 16px;
+  line-height: normal;
+  text-wrap: balance;
+}
+
+.rsvp-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  text-align: left;
+}
+
+.form-field label,
+.attendance-field legend {
+  color: var(--green);
+  font-family: var(--sans-font);
+  font-size: 32px;
+}
+
+.form-field input,
+.form-field select {
+  width: 100%;
+  border: 0;
+  border-radius: 100px;
+  outline: 0;
+  padding: 10px;
+  background: rgba(116, 109, 89, 0.1);
+  color: var(--text);
+  font-family: var(--sans-font);
+  font-size: 22px;
+  transition: box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.form-field input::placeholder {
+  color: rgba(64, 81, 70, 0.55);
+}
+
+.form-field input:focus,
+.form-field select:focus {
+  background: rgba(116, 109, 89, 0.14);
+  box-shadow: 0 0 0 1px var(--green);
+}
+
+.form-field select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--green) 50%),
+    linear-gradient(135deg, var(--green) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) 50%,
+    calc(100% - 13px) 50%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 42px;
+}
+
+.attendance-field {
+  display: flex;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+}
+
+.attendance-field legend {
+  margin-bottom: 8px;
+}
+
+.attendance-field label {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.attendance-field input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--green);
+  cursor: pointer;
+}
+
+.attendance-field span {
+  line-height: 1.4;
+}
+
+.rsvp-form .button {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.rsvp-form__message {
+  min-height: 18px;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.rsvp-form__message.is-success {
+  color: #496957;
+}
+
+.rsvp-form__message.is-error {
+  color: #9b3b32;
+}
+
+.rsvp-form .button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+@media (max-width: 767px) {
+  .rsvp {
+    background-size: 100% 100%;
+    background-image: url("../assets/rsvp-leaves-mobile.webp");
+  }
+
+  .rsvp .section-title {
+    font-size: 32px;
+    margin-bottom: 5px;
+  }
+
+  .rsvp__container {
+    padding: 35px 20px;
+    min-height: unset;
+  }
+
+  .rsvp-card {
+    min-height: 300px;
+    padding: 22% 20%;
+  }
+
+  .rsvp-card__content {
+    width: 100%;
+  }
+
+  .rsvp-card__intro {
+    margin-bottom: 10px;
+    font-size: 13px;
+  }
+
+  .rsvp-form {
+    gap: 10px;
+  }
+
+  .form-field label,
+  .attendance-field legend {
+    font-size: 16px;
+  }
+
+  .form-field input,
+  .form-field select {
+    padding: 5px 10px;
+    font-size: 16px;
+  }
+
+  .rsvp__decor {
+    width: 280px;
+    height: 280px;
+  }
+  
+  .attendance-field span {
+    font-size: 12px;
+  }
+  .attendance-field input {
+    width: 12px;
+    height: 12px;
+  }
+}

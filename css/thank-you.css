@@ -1,0 +1,260 @@
+.thank-you-page {
+  margin: 0;
+  background: #FFFDFA;
+}
+
+.thank-you-hero {
+  position: relative;
+  min-height: 480px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 40px 0;
+  background: #374F3F;
+  color: #fff;
+  background-image: url("../assets/rsvp-leaves.webp");
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+}
+
+.thank-you-hero__content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.thank-you-hero .section-title {
+  margin-bottom: 20px;
+  color: #fff;
+  font-size: 72px;
+}
+
+.thank-you-hero__content p {
+  margin: 0 auto 20px;
+  font-size: 22px;
+  line-height: 1.6;
+  text-wrap: balance;
+}
+
+.thank-you-hero__content > span {
+  display: block;
+  font-family: var(--heading-font);
+  font-size: 52px;
+}
+
+.attendees {
+  position: relative;
+  min-height: 900px;
+  overflow: hidden;
+  background: #FFFDFA;
+  background-image: url("../assets/invitation-bg-image.webp");
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+}
+
+.attendees__container {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  padding-block: 40px;
+}
+
+.attendees-card {
+  max-width: 800px;
+  width: 100%;
+  min-height: 1000px;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-block: 150px;
+  background-image: url("../assets/attendee-frame.webp");
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-position: top center;
+}
+
+.attendees-card__content {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+}
+
+.attendees-card .section-title {
+  margin-bottom: 45px;
+  color: #fffdf9;
+  font-size: clamp(52px, 6vw, 74px);
+}
+
+.attendees-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-height: 442px;
+}
+
+.attendees-list__item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 40px;
+  align-items: center;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 253, 249, 0.65);
+  color: #fff;
+  text-align: left;
+  opacity: 1;
+  transform: translateY(0);
+  animation: attendeeFadeIn 0.35s ease both;
+}
+
+.attendees-list__name {
+  font-family: var(--serif-font);
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.attendees-list__role {
+  font-family: var(--serif-font);
+  font-size: 20px;
+  font-style: italic;
+  opacity: 1;
+}
+
+.attendees-list__loading,
+.attendees-list__empty,
+.attendees-list__error {
+  margin: 0;
+  color: #fffdf9;
+  font-family: var(--serif-font);
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.attendees-pagination {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 22px;
+  margin-top: 38px;
+}
+
+.attendees-pagination[hidden] {
+  display: none;
+}
+
+.attendees-pagination__button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: #fffdf9;
+  font-family: var(--serif-font);
+  font-size: 16px;
+  cursor: pointer;
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+.attendees-pagination__button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.attendees-pagination__button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.attendees-pagination__count {
+  min-width: 45px;
+  color: #fffdf9;
+  font-family: var(--serif-font);
+  font-size: 16px;
+  text-align: center;
+}
+
+@keyframes attendeeFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 991px) {
+  .thank-you-hero {
+    padding-block: 20px;
+    background-size: auto 100%;
+  }
+
+  .thank-you-hero .section-title {
+    font-size: 52px;
+  }
+
+  .thank-you-hero__content p {
+    margin-bottom: 35px;
+    font-size: 15px;
+  }
+
+  .thank-you-hero__content > span {
+    font-size: 24px;
+  }
+
+  .attendees {
+    min-height: unset;
+    background-size: auto 100%;
+  }
+
+  .attendees__container {
+    padding: 20px 20px;
+  }
+
+  .attendees-card {
+    max-width: 500px;
+    min-height: 300px;
+    padding: 80px 17%;
+    background-size: 100% 100%;
+  }
+
+  .attendees-card .section-title {
+    margin-bottom: 10px;
+    font-size: 42px;
+  }
+
+  .attendees-list {
+    gap: 10px;
+    min-height: 250px;
+  }
+
+  .attendees-list__item {
+    gap: 12px;
+    padding-bottom: 10px;
+  }
+
+  .attendees-list__name {
+    font-size: 14px;
+  }
+
+  .attendees-list__role {
+    font-size: 12px;
+  }
+
+  .attendees-pagination {
+    gap: 16px;
+    margin-top: 25px;
+  }
+
+  .attendees-pagination__button,
+  .attendees-pagination__count {
+    font-size: 13px;
+  }
+}

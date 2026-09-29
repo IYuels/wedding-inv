@@ -1,0 +1,127 @@
+@import url('https://fonts.googleapis.com/css2?family=Abhaya+Libre:wght@400;500;600;700;800&family=Imperial+Script&family=Italianno&display=swap');
+:root {
+  --green-dark: #304f40;
+  --green: #4A6253;
+  --green-light: #899681;
+  --brown-dark: #5a4739;
+  --brown: #8b725c;
+  --brown-light: #b19a80;
+  --cream: #f6f2e8;
+  --cream-dark: #eae4d4;
+  --white: #fffdf9;
+  --text: #405146;
+  --heading-font: "Imperial Script";
+  --serif-font: "Abhaya Libre";
+  --sans-font: "Italianno";
+  --page-width: 1200px;
+  --transition: 300ms ease;
+}
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+body {
+  background: var(--white);
+  color: var(--text);
+  font-family: var(--serif-font);
+  overflow-x: hidden;
+}
+body.is-locked {
+  overflow: hidden;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+button {
+  cursor: pointer;
+}
+img {
+  display: block;
+  max-width: 100%;
+}
+p,
+h1,
+h2,
+h3 {
+  margin-top: 0;
+}
+.wedding-page {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 1s ease;
+}
+body.invitation-opened .wedding-page {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+.section {
+  position: relative;
+  width: 100%;
+}
+.page-container {
+  max-width: 1528px;
+  width: 100%;
+  padding-inline: 50px;
+  margin: 0 auto;
+}
+.section-eyebrow {
+  margin-bottom: 10px;
+  font-family: var(--serif-font);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.section-title {
+  margin-bottom: 10px;
+  color: var(--green-dark);
+  font-family: var(--heading-font);
+  font-size: 72px;
+  font-weight: 400;
+  line-height: 0.9;
+}
+.button {
+  border: 0;
+  border-radius: 100px;
+  padding: 13px 30px;
+  background: var(--green);
+  color: #fff;
+  font-family: var(--sans-font);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: background var(--transition), transform var(--transition);
+}
+.button:hover {
+  background: var(--green-dark);
+  transform: translateY(-2px);
+}
+@media (max-width: 991px) {
+  .page-container {
+    padding-inline: 20px;
+  }
+  .section-title {
+    font-size: 52px;
+  }
+  .section-eyebrow {
+    font-size: 14px;
+  }
+}
+
