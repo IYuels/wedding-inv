@@ -197,13 +197,13 @@
 
   .form-field label,
   .attendance-field legend {
-    font-size: 16px;
+    font-size: 18px;
   }
 
   .form-field input,
   .form-field select {
     padding: 5px 10px;
-    font-size: 16px;
+    font-size: 18px;
   }
 
   .rsvp__decor {
