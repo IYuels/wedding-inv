@@ -39,7 +39,7 @@
 
 .thank-you-hero__content > span {
   display: block;
-  font-family: var(--heading-font);
+  font-family: var(--serif-font);
   font-size: 52px;
 }
 
@@ -221,7 +221,7 @@
   .attendees-card {
     max-width: 500px;
     min-height: 300px;
-    padding: 80px 17%;
+    padding: 80px 19%;
     background-size: 100% 100%;
   }
 

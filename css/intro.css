@@ -243,7 +243,7 @@
   z-index: 12;
   top: 55%;
   left: 50%;
-  width: clamp(82px, 7vw, 120px);
+  width: 200px;
   aspect-ratio: 1;
   background:
     url("../assets/envelope-stamp.webp")
@@ -429,7 +429,7 @@
 
   .envelope__seal {
     top: 50%;
-    width: 82px;
+    width: 120px;
     z-index: 10;
   }
 

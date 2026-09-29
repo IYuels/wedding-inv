@@ -2,11 +2,10 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/fireba
 
 import {
   getFirestore,
+  doc,
   collection,
-  addDoc,
   serverTimestamp,
-  writeBatch,
-  doc
+  runTransaction
 } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
 import { firebaseConfig } from "./firebase-config.js";
@@ -14,130 +13,315 @@ import { firebaseConfig } from "./firebase-config.js";
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const formatGuestName = fullName => {
-  const cleanName = fullName
+const cleanGuestName = fullName => {
+  return fullName
     .trim()
     .replace(/\s+/g, " ");
+};
 
-  const parts = cleanName.split(" ");
+const normalizeGuestName = fullName => {
+  return cleanGuestName(fullName)
+    .normalize("NFKC")
+    .toLocaleLowerCase()
+    .replace(/[.'’]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+};
 
-  if (parts.length === 1) {
-    return `${parts[0].charAt(0).toUpperCase()}.`;
-  }
+const hasAtLeastTwoWords = fullName => {
+  const words = cleanGuestName(fullName)
+    .split(" ")
+    .filter(Boolean);
 
-  const surname = parts.pop();
+  return words.length >= 2;
+};
 
-  const initials = parts
-    .map(name => `${name.charAt(0).toUpperCase()}.`)
+const hashName = async fullName => {
+  const normalizedName =
+    normalizeGuestName(fullName);
+
+  const encoded =
+    new TextEncoder().encode(
+      normalizedName
+    );
+
+  const hashBuffer =
+    await crypto.subtle.digest(
+      "SHA-256",
+      encoded
+    );
+
+  return Array.from(
+    new Uint8Array(hashBuffer)
+  )
+    .map(byte =>
+      byte
+        .toString(16)
+        .padStart(2, "0")
+    )
     .join("");
+};
+
+const formatGuestName = fullName => {
+  const cleanName =
+    cleanGuestName(fullName);
+
+  const parts =
+    cleanName.split(" ");
+
+  const surname =
+    parts.pop();
+
+  const initials =
+    parts
+      .map(part => {
+        return `${part
+          .charAt(0)
+          .toUpperCase()}.`;
+      })
+      .join("");
 
   return `${initials} ${surname}`;
 };
 
+const showError = (
+  messageElement,
+  text
+) => {
+  messageElement.textContent = text;
+
+  messageElement.classList.remove(
+    "is-success"
+  );
+
+  messageElement.classList.add(
+    "is-error"
+  );
+};
+
 const initRsvpForm = () => {
-  const form = document.querySelector("#rsvpForm");
+  const form =
+    document.querySelector(
+      "#rsvpForm"
+    );
 
   if (!form) {
     return false;
   }
 
-  if (form.dataset.firebaseInitialized === "true") {
+  if (
+    form.dataset.firebaseInitialized ===
+    "true"
+  ) {
     return true;
   }
 
-  form.dataset.firebaseInitialized = "true";
+  form.dataset.firebaseInitialized =
+    "true";
 
-  const message = form.querySelector("#rsvpMessage");
-
-  const submitButton = form.querySelector(
-    'button[type="submit"]'
-  );
-
-  form.addEventListener("submit", async event => {
-    event.preventDefault();
-
-    const formData = new FormData(form);
-
-    const role = formData.get("role")?.trim();
-    const name = formData.get("name")?.trim();
-    const attendance = formData.get("attendance");
-
-    if (!role || !name || !attendance) {
-      message.textContent =
-        "Please complete all fields before submitting.";
-
-      message.classList.remove("is-success");
-      message.classList.add("is-error");
-
-      return;
-    }
-
-    const originalButtonText =
-      submitButton.textContent;
-
-    submitButton.disabled = true;
-    submitButton.textContent = "Submitting...";
-
-    message.textContent = "";
-
-    message.classList.remove(
-      "is-success",
-      "is-error"
+  const message =
+    form.querySelector(
+      "#rsvpMessage"
     );
 
-    try {
-      const batch = writeBatch(db);
+  const nameInput =
+    form.querySelector(
+      "#guestName"
+    );
 
-      const rsvpRef = doc(
-        collection(db, "rsvps")
-      );
+  const submitButton =
+    form.querySelector(
+      'button[type="submit"]'
+    );
 
-      batch.set(rsvpRef, {
-        role,
-        name,
-        attendance,
-        submittedAt: serverTimestamp()
-      });
+  form.addEventListener(
+    "submit",
+    async event => {
+      event.preventDefault();
 
-      if (attendance === "Attending") {
-        const attendeeRef = doc(
-          collection(db, "publicAttendees")
+      const formData =
+        new FormData(form);
+
+      const role =
+        formData
+          .get("role")
+          ?.trim();
+
+      const rawName =
+        formData
+          .get("name")
+          ?.trim();
+
+      const attendance =
+        formData.get(
+          "attendance"
         );
 
-        const displayName =
-          formatGuestName(name);
+      if (
+        !role ||
+        !rawName ||
+        !attendance
+      ) {
+        showError(
+          message,
+          "Please complete all fields before submitting."
+        );
 
-        batch.set(attendeeRef, {
-          displayName,
-          role,
-          submittedAt: serverTimestamp()
-        });
+        return;
       }
 
-      await batch.commit();
+      if (
+        !hasAtLeastTwoWords(
+          rawName
+        )
+      ) {
+        showError(
+          message,
+          "Please enter at least your first name and surname."
+        );
 
-      window.location.href =
-        `./thank-you.html?attendance=${encodeURIComponent(attendance)}`;
+        nameInput.focus();
 
-    } catch (error) {
-      console.error(
-        "Firebase RSVP error:",
-        error
-      );
+        return;
+      }
 
-      message.textContent =
-        "Something went wrong while sending your RSVP. Please try again.";
+      const name =
+        cleanGuestName(
+          rawName
+        );
 
-      message.classList.add(
+      const originalButtonText =
+        submitButton.textContent;
+
+      submitButton.disabled = true;
+
+      submitButton.textContent =
+        "Checking...";
+
+      message.textContent = "";
+
+      message.classList.remove(
+        "is-success",
         "is-error"
       );
 
-      submitButton.disabled = false;
+      try {
+        const nameHash =
+          await hashName(name);
 
-      submitButton.textContent =
-        originalButtonText;
+        const nameLockRef =
+          doc(
+            db,
+            "rsvpNames",
+            nameHash
+          );
+
+        const rsvpRef =
+          doc(
+            db,
+            "rsvps",
+            nameHash
+          );
+
+        const attendeeRef =
+          doc(
+            db,
+            "publicAttendees",
+            nameHash
+          );
+
+        submitButton.textContent =
+          "Submitting...";
+
+        await runTransaction(
+          db,
+          async transaction => {
+            const nameLockSnapshot =
+              await transaction.get(
+                nameLockRef
+              );
+
+            if (
+              nameLockSnapshot.exists()
+            ) {
+              throw new Error(
+                "DUPLICATE_NAME"
+              );
+            }
+
+            transaction.set(
+              nameLockRef,
+              {
+                createdAt:
+                  serverTimestamp()
+              }
+            );
+
+            transaction.set(
+              rsvpRef,
+              {
+                role,
+                name,
+                attendance,
+                submittedAt:
+                  serverTimestamp()
+              }
+            );
+
+            if (
+              attendance ===
+              "Attending"
+            ) {
+              transaction.set(
+                attendeeRef,
+                {
+                  displayName:
+                    formatGuestName(
+                      name
+                    ),
+                  role,
+                  submittedAt:
+                    serverTimestamp()
+                }
+              );
+            }
+          }
+        );
+
+        window.location.href =
+          `./thank-you.html?attendance=${encodeURIComponent(attendance)}`;
+
+      } catch (error) {
+        console.error(
+          "Firebase RSVP error:",
+          error
+        );
+
+        if (
+          error.message ===
+          "DUPLICATE_NAME"
+        ) {
+          showError(
+            message,
+            "This name is already in the RSVP list."
+          );
+
+          nameInput.focus();
+        } else {
+          showError(
+            message,
+            "Something went wrong while sending your RSVP. Please try again."
+          );
+        }
+
+        submitButton.disabled =
+          false;
+
+        submitButton.textContent =
+          originalButtonText;
+      }
     }
-  });
+  );
 
   return true;
 };
@@ -147,7 +331,10 @@ document.addEventListener(
   initRsvpForm
 );
 
-if (document.readyState === "loading") {
+if (
+  document.readyState ===
+  "loading"
+) {
   document.addEventListener(
     "DOMContentLoaded",
     initRsvpForm
