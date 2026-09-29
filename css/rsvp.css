@@ -160,8 +160,9 @@
   pointer-events: none;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 991px) {
   .rsvp {
+    min-height: 600px;
     background-size: 100% 100%;
     background-image: url("../assets/rsvp-leaves-mobile.webp");
   }
