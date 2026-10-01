@@ -261,15 +261,24 @@
     margin-bottom: 20px;
     font-size: 42px;
   }
-
+  
   .attendees-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
     gap: 6px;
+    width: 100%;
     margin-bottom: 18px;
+    padding-bottom: 0;
+    overflow: visible;
   }
 
   .attendees-tabs__button {
+    flex: 0 1 auto;
     padding: 6px 10px;
     font-size: 11px;
+    white-space: nowrap;
   }
 
   .attendees-list {
