@@ -13,6 +13,59 @@ import { firebaseConfig } from "./firebase-config.js";
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+const invitationConfigs = {
+  "/godfather-godmother": {
+    message:
+      "We would be honored to have you as one of our godparents. Your presence, guidance, and blessing would mean so much to us as we begin this new chapter together.",
+    roles: [
+      "Godfather",
+      "Godmother"
+    ]
+  },
+
+  "/bridesmaid": {
+    message:
+      "We would be so happy to have you stand beside us as one of our bridesmaids. Your love, support, and presence would make our wedding day even more special.",
+    roles: [
+      "Bridesmaid"
+    ]
+  },
+
+  "/groomsmen": {
+    message:
+      "We would be honored to have you stand beside us as one of our groomsmen. Your friendship, support, and presence would mean so much to us on our special day.",
+    roles: [
+      "Groomsman"
+    ]
+  },
+
+  "/guest": {
+    message:
+      "We would be delighted to celebrate our wedding day with you. Your presence would make this special moment even more meaningful to us.",
+    roles: [
+      "Guest"
+    ]
+  }
+};
+
+const getInvitationType = () => {
+  let path = window.location.pathname;
+
+  if (path.length > 1) {
+    path = path.replace(/\/$/, "");
+  }
+
+  return invitationConfigs[path]
+    ? path
+    : "/godfather-godmother";
+};
+
+const getInvitationConfig = () => {
+  return invitationConfigs[
+    getInvitationType()
+  ];
+};
+
 const cleanGuestName = fullName => {
   return fullName
     .trim()
@@ -99,6 +152,73 @@ const showError = (
   );
 };
 
+const setupInvitationType = form => {
+  const config =
+    getInvitationConfig();
+
+  const intro =
+    document.querySelector(
+      "#rsvpIntro"
+    );
+
+  const roleSelect =
+    form.querySelector(
+      "#guestRole"
+    );
+
+  if (intro) {
+    intro.textContent =
+      config.message;
+  }
+
+  if (!roleSelect) {
+    return;
+  }
+
+  roleSelect.innerHTML = "";
+
+  if (config.roles.length > 1) {
+    const defaultOption =
+      document.createElement(
+        "option"
+      );
+
+    defaultOption.value = "";
+
+    defaultOption.textContent =
+      "Select your role";
+
+    roleSelect.appendChild(
+      defaultOption
+    );
+  }
+
+  config.roles.forEach(role => {
+    const option =
+      document.createElement(
+        "option"
+      );
+
+    option.value = role;
+    option.textContent = role;
+
+    roleSelect.appendChild(
+      option
+    );
+  });
+
+  if (config.roles.length === 1) {
+    roleSelect.value =
+      config.roles[0];
+
+    roleSelect
+      .closest(".form-field")
+      ?.classList.add(
+        "is-single-role"
+      );
+  }
+};
+
 const initRsvpForm = () => {
   const form =
     document.querySelector(
@@ -118,6 +238,8 @@ const initRsvpForm = () => {
 
   form.dataset.firebaseInitialized =
     "true";
+
+  setupInvitationType(form);
 
   const message =
     form.querySelector(
@@ -157,6 +279,9 @@ const initRsvpForm = () => {
           "attendance"
         );
 
+      const config =
+        getInvitationConfig();
+
       if (
         !role ||
         !rawName ||
@@ -165,6 +290,17 @@ const initRsvpForm = () => {
         showError(
           message,
           "Please complete all fields before submitting."
+        );
+
+        return;
+      }
+
+      if (
+        !config.roles.includes(role)
+      ) {
+        showError(
+          message,
+          "Please select a valid role."
         );
 
         return;
@@ -216,19 +352,9 @@ const initRsvpForm = () => {
             nameHash
           );
 
-        const rsvpRef =
-          doc(
-            db,
-            "rsvps",
-            nameHash
-          );
-
-        const attendeeRef =
-          doc(
-            db,
-            "publicAttendees",
-            nameHash
-          );
+        const invitationType =
+          getInvitationType()
+            .replace("/", "");
 
         submitButton.textContent =
           "Submitting...";
@@ -257,21 +383,36 @@ const initRsvpForm = () => {
               }
             );
 
-            transaction.set(
-              rsvpRef,
-              {
-                role,
-                name,
-                attendance,
-                submittedAt:
-                  serverTimestamp()
-              }
-            );
-
             if (
               attendance ===
               "Attending"
             ) {
+              const rsvpRef =
+                doc(
+                  db,
+                  "rsvps",
+                  nameHash
+                );
+
+              const attendeeRef =
+                doc(
+                  db,
+                  "publicAttendees",
+                  nameHash
+                );
+
+              transaction.set(
+                rsvpRef,
+                {
+                  role,
+                  name,
+                  attendance,
+                  invitationType,
+                  submittedAt:
+                    serverTimestamp()
+                }
+              );
+
               transaction.set(
                 attendeeRef,
                 {
@@ -285,11 +426,45 @@ const initRsvpForm = () => {
                 }
               );
             }
+
+            if (
+              attendance ===
+              "Not attending"
+            ) {
+              const declinedRef =
+                doc(
+                  db,
+                  "declinedRsvps",
+                  nameHash
+                );
+
+              transaction.set(
+                declinedRef,
+                {
+                  role,
+                  name,
+                  attendance,
+                  invitationType,
+                  submittedAt:
+                    serverTimestamp()
+                }
+              );
+            }
           }
         );
 
+        if (
+          attendance ===
+          "Attending"
+        ) {
+          window.location.href =
+            "/thank-you";
+
+          return;
+        }
+
         window.location.href =
-          `./thank-you.html?attendance=${encodeURIComponent(attendance)}`;
+          "/sections/declined";
 
       } catch (error) {
         console.error(

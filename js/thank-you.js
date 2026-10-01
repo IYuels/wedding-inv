@@ -13,16 +13,26 @@ import { firebaseConfig } from "./firebase-config.js";
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const attendeesList = document.querySelector("#attendeesList");
-const pagination = document.querySelector("#attendeesPagination");
-const prevButton = document.querySelector("#prevPage");
-const nextButton = document.querySelector("#nextPage");
-const pageCount = document.querySelector("#pageCount");
+const attendeesList =
+  document.querySelector("#attendeesList");
 
-const ITEMS_PER_PAGE = 7;
+const attendeesTabs =
+  document.querySelector("#attendeesTabs");
+
+const thankYouMessage =
+  document.querySelector("#thankYouMessage");
+
+const ROLES = [
+  "All",
+  "Godfather",
+  "Godmother",
+  "Bridesmaid",
+  "Groomsman",
+  "Guest"
+];
 
 let attendees = [];
-let currentPage = 1;
+let activeRole = "All";
 
 const escapeHtml = value => {
   return String(value)
@@ -33,50 +43,155 @@ const escapeHtml = value => {
     .replaceAll("'", "&#039;");
 };
 
-const getTotalPages = () => {
-  return Math.ceil(attendees.length / ITEMS_PER_PAGE);
-};
+const updateThankYouMessage = () => {
+  if (!thankYouMessage) {
+    return;
+  }
 
-const renderAttendees = () => {
-  const totalPages = getTotalPages();
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
 
-  if (!attendees.length) {
-    attendeesList.innerHTML = `
-      <p class="attendees-list__empty">
-        Our guest list will appear here soon.
-      </p>
-    `;
+  const attendance =
+    params.get("attendance");
 
-    pagination.hidden = true;
+  if (
+    attendance ===
+    "Not attending"
+  ) {
+    thankYouMessage.textContent =
+      "Thank you for letting us know. Although we will miss having you with us on our special day, your love, prayers, and blessing mean so much to us.";
 
     return;
   }
 
-  if (currentPage > totalPages) {
-    currentPage = totalPages;
+  thankYouMessage.textContent =
+    "Thank you for saying yes to celebrating this beautiful day with us. Your presence, love, and blessing mean more than words can say, and we cannot wait to share this special moment with you.";
+};
+
+const getRoleCount = role => {
+  if (role === "All") {
+    return attendees.length;
   }
 
-  const startIndex =
-    (currentPage - 1) * ITEMS_PER_PAGE;
+  return attendees.filter(
+    attendee =>
+      attendee.role === role
+  ).length;
+};
 
-  const endIndex =
-    startIndex + ITEMS_PER_PAGE;
+const renderTabs = () => {
+  if (!attendeesTabs) {
+    return;
+  }
 
-  const currentAttendees =
-    attendees.slice(startIndex, endIndex);
+  attendeesTabs.innerHTML = "";
+
+  ROLES.forEach(role => {
+    const button =
+      document.createElement(
+        "button"
+      );
+
+    const count =
+      getRoleCount(role);
+
+    button.type = "button";
+
+    button.className =
+      "attendees-tabs__button";
+
+    if (role === activeRole) {
+      button.classList.add(
+        "is-active"
+      );
+    }
+
+    button.setAttribute(
+      "role",
+      "tab"
+    );
+
+    button.setAttribute(
+      "aria-selected",
+      role === activeRole
+        ? "true"
+        : "false"
+    );
+
+    button.innerHTML = `
+      ${escapeHtml(role)}
+      <span class="attendees-tabs__count">
+        ${count}
+      </span>
+    `;
+
+    button.addEventListener(
+      "click",
+      () => {
+        activeRole = role;
+
+        renderTabs();
+
+        renderAttendees();
+      }
+    );
+
+    attendeesTabs.appendChild(
+      button
+    );
+  });
+};
+
+const getFilteredAttendees = () => {
+  if (activeRole === "All") {
+    return attendees;
+  }
+
+  return attendees.filter(
+    attendee =>
+      attendee.role ===
+      activeRole
+  );
+};
+
+const renderAttendees = () => {
+  if (!attendeesList) {
+    return;
+  }
+
+  const filteredAttendees =
+    getFilteredAttendees();
 
   attendeesList.innerHTML = "";
 
-  currentAttendees.forEach(
+  attendeesList.scrollTop = 0;
+
+  if (
+    !filteredAttendees.length
+  ) {
+    attendeesList.innerHTML = `
+      <p class="attendees-list__empty">
+        No confirmed ${escapeHtml(activeRole.toLowerCase())} attendees yet.
+      </p>
+    `;
+
+    return;
+  }
+
+  filteredAttendees.forEach(
     (attendee, index) => {
       const item =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
 
       item.className =
         "attendees-list__item";
 
       item.style.animationDelay =
-        `${index * 50}ms`;
+        `${Math.min(index, 8) * 40}ms`;
 
       item.innerHTML = `
         <span class="attendees-list__name">
@@ -88,54 +203,21 @@ const renderAttendees = () => {
         </span>
       `;
 
-      attendeesList.appendChild(item);
+      attendeesList.appendChild(
+        item
+      );
     }
   );
-
-  pageCount.textContent =
-    `${String(currentPage).padStart(2, "0")} / ${String(totalPages).padStart(2, "0")}`;
-
-  prevButton.disabled =
-    currentPage === 1;
-
-  nextButton.disabled =
-    currentPage === totalPages;
-
-  pagination.hidden =
-    totalPages <= 1;
 };
 
-const goToPage = page => {
-  const totalPages = getTotalPages();
-
+const loadAttendees = async () => {
   if (
-    page < 1 ||
-    page > totalPages ||
-    page === currentPage
+    !attendeesList ||
+    !attendeesTabs
   ) {
     return;
   }
 
-  currentPage = page;
-
-  renderAttendees();
-};
-
-prevButton.addEventListener(
-  "click",
-  () => {
-    goToPage(currentPage - 1);
-  }
-);
-
-nextButton.addEventListener(
-  "click",
-  () => {
-    goToPage(currentPage + 1);
-  }
-);
-
-const loadAttendees = async () => {
   try {
     const attendeesQuery =
       query(
@@ -150,15 +232,32 @@ const loadAttendees = async () => {
       );
 
     const snapshot =
-      await getDocs(attendeesQuery);
+      await getDocs(
+        attendeesQuery
+      );
 
-    attendees = snapshot.docs.map(
-      documentSnapshot => {
-        return documentSnapshot.data();
-      }
-    );
+    attendees =
+      snapshot.docs
+        .map(
+          documentSnapshot => {
+            return {
+              id:
+                documentSnapshot.id,
 
-    currentPage = 1;
+              ...documentSnapshot.data()
+            };
+          }
+        )
+        .filter(attendee => {
+          return (
+            attendee.displayName &&
+            ROLES.includes(
+              attendee.role
+            )
+          );
+        });
+
+    renderTabs();
 
     renderAttendees();
 
@@ -168,14 +267,16 @@ const loadAttendees = async () => {
       error
     );
 
+    attendeesTabs.innerHTML = "";
+
     attendeesList.innerHTML = `
       <p class="attendees-list__error">
         We couldn't load the attendee list right now.
       </p>
     `;
-
-    pagination.hidden = true;
   }
 };
+
+updateThankYouMessage();
 
 loadAttendees();

@@ -125,3 +125,10 @@ body.invitation-opened .wedding-page {
   }
 }
 
+.form-field.is-single-role select {
+  pointer-events: none;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: none;
+  opacity: 1;
+}

@@ -1,0 +1,90 @@
+.declined-page {
+  margin: 0;
+  background: #374F3F;
+}
+
+.declined {
+  position: relative;
+  width: 100%;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 60px 0;
+  background-color: #374F3F;
+  background-image: url("../assets/rsvp-leaves.webp");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: #fff;
+}
+
+.declined::before {
+  position: absolute;
+  inset: 0;
+  background: rgba(55, 79, 63, 0.18);
+  content: "";
+}
+
+.declined__content {
+  position: relative;
+  z-index: 2;
+  max-width: 760px;
+  text-align: center;
+}
+
+.declined__eyebrow {
+  margin-bottom: 15px;
+  font-family: var(--serif-font);
+  font-size: 14px;
+  letter-spacing: 0.18em;
+}
+
+.declined .section-title {
+  margin-bottom: 30px;
+  color: #fff;
+  font-size: clamp(64px, 8vw, 100px);
+}
+
+.declined__message {
+  max-width: 650px;
+  margin: 0 auto 35px;
+  font-family: var(--serif-font);
+  font-size: 22px;
+  line-height: 1.6;
+  text-wrap: balance;
+}
+
+.declined__closing {
+  display: block;
+  font-family: var(--serif-font);
+  font-size: 30px;
+  font-style: italic;
+}
+
+@media (max-width: 991px) {
+  .declined {
+    padding: 50px 24px;
+    background-size: auto 100%;
+  }
+
+  .declined__eyebrow {
+    font-size: 12px;
+  }
+
+  .declined .section-title {
+    margin-bottom: 20px;
+    font-size: 56px;
+  }
+
+  .declined__message {
+    margin-bottom: 28px;
+    font-size: 16px;
+    line-height: 1.55;
+  }
+
+  .declined__closing {
+    font-size: 22px;
+  }
+}

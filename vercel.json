@@ -1,6 +1,24 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/godfather-godmother",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/bridesmaid",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/groomsmen",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/guest",
+      "destination": "/index.html"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",

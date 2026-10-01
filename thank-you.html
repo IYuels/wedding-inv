@@ -7,8 +7,8 @@
 
   <title>Thank You</title>
 
-  <link rel="stylesheet" href="./css/global.css">
-  <link rel="stylesheet" href="./css/thank-you.css">
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/thank-you.css">
 </head>
 
 <body class="thank-you-page">
@@ -19,7 +19,7 @@
           Thank You!
         </h1>
 
-        <p>
+        <p id="thankYouMessage">
           Thank you for saying yes to celebrating this beautiful day with us.
           Your presence, love, and blessing mean more than words can say,
           and we cannot wait to share this special moment with you.
@@ -41,43 +41,20 @@
             </h2>
 
             <div
+              class="attendees-tabs"
+              id="attendeesTabs"
+              role="tablist"
+              aria-label="Attendee roles"
+            ></div>
+
+            <div
               class="attendees-list"
               id="attendeesList"
+              role="tabpanel"
             >
               <p class="attendees-list__loading">
                 Loading our lovely guests...
               </p>
-            </div>
-
-            <div
-              class="attendees-pagination"
-              id="attendeesPagination"
-              hidden
-            >
-              <button
-                class="attendees-pagination__button"
-                id="prevPage"
-                type="button"
-                aria-label="Previous attendees page"
-              >
-                ← Prev
-              </button>
-
-              <span
-                class="attendees-pagination__count"
-                id="pageCount"
-              >
-                01
-              </span>
-
-              <button
-                class="attendees-pagination__button"
-                id="nextPage"
-                type="button"
-                aria-label="Next attendees page"
-              >
-                Next →
-              </button>
             </div>
 
           </div>
@@ -88,7 +65,7 @@
 
   <script
     type="module"
-    src="./js/thank-you.js"
+    src="/js/thank-you.js"
   ></script>
 </body>
 </html>

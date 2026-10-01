@@ -7,15 +7,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   const sections = [
     {
       target: "#invitationSection",
-      file: "./sections/invitation.html"
+      file: "/sections/invitation.html"
     },
     {
       target: "#dressCodeSection",
-      file: "./sections/dress-code.html"
+      file: "/sections/dress-code.html"
     },
     {
       target: "#rsvpSection",
-      file: "./sections/rsvp.html"
+      file: "/sections/rsvp.html"
     }
   ];
 
@@ -25,7 +25,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   const loadSections = async () => {
     try {
       for (const section of sections) {
-        const target = document.querySelector(section.target);
+        const target = document.querySelector(
+          section.target
+        );
 
         if (!target) {
           throw new Error(
@@ -33,7 +35,9 @@ document.addEventListener("DOMContentLoaded", async () => {
           );
         }
 
-        const response = await fetch(section.file);
+        const response = await fetch(
+          section.file
+        );
 
         if (!response.ok) {
           throw new Error(
@@ -41,7 +45,8 @@ document.addEventListener("DOMContentLoaded", async () => {
           );
         }
 
-        const html = await response.text();
+        const html =
+          await response.text();
 
         target.innerHTML = html;
       }
@@ -49,8 +54,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       sectionsLoaded = true;
 
       document.dispatchEvent(
-        new CustomEvent("weddingSectionsLoaded")
+        new CustomEvent(
+          "weddingSectionsLoaded"
+        )
       );
+
     } catch (error) {
       console.error(
         "Wedding sections failed to load:",
@@ -70,7 +78,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         >
           <div>
             <h2>Unable to load invitation</h2>
-            <p>Please refresh the page and try again.</p>
+            <p>
+              Please refresh the page and try again.
+            </p>
           </div>
         </div>
       `;
@@ -82,23 +92,34 @@ document.addEventListener("DOMContentLoaded", async () => {
   await loadSections();
 
   const openInvitation = () => {
-    if (opened || !sectionsLoaded) {
+    if (
+      opened ||
+      !sectionsLoaded
+    ) {
       return;
     }
 
     opened = true;
 
-    introTrigger.disabled = true;
+    if (introTrigger) {
+      introTrigger.disabled = true;
+    }
 
-    intro.classList.add("is-opening");
+    if (intro) {
+      intro.classList.add(
+        "is-opening"
+      );
+    }
 
     if (audio) {
-      audio.play().catch(error => {
-        console.warn(
-          "Audio could not start:",
-          error
-        );
-      });
+      audio
+        .play()
+        .catch(error => {
+          console.warn(
+            "Audio could not start:",
+            error
+          );
+        });
     }
 
     window.setTimeout(() => {
@@ -124,11 +145,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     }, 1150);
 
     window.setTimeout(() => {
-      intro.classList.add("is-hidden");
+      if (intro) {
+        intro.classList.add(
+          "is-hidden"
+        );
+      }
     }, 1400);
 
     window.setTimeout(() => {
-      intro.style.display = "none";
+      if (intro) {
+        intro.style.display =
+          "none";
+      }
 
       document.body.classList.remove(
         "invitation-revealing"
@@ -136,8 +164,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     }, 2300);
   };
 
-  introTrigger.addEventListener(
-    "click",
-    openInvitation
-  );
+  if (introTrigger) {
+    introTrigger.addEventListener(
+      "click",
+      openInvitation
+    );
+  }
 });

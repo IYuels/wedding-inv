@@ -6,35 +6,47 @@
           Reply Kindly
         </h2>
 
-        <p class="rsvp-card__intro">
-          We would be honored to have you as one of our godparents. Your presence, guidance, and blessing would mean so much to us as we begin this new chapter together.
-        </p>
+        <p
+          class="rsvp-card__intro"
+          id="rsvpIntro"
+        ></p>
 
         <form class="rsvp-form" id="rsvpForm">
-          <div class="form-field">
-            <label for="godparentRole">Role</label>
+          <div class="form-field" id="roleField">
+            <label for="guestRole">
+              Role
+            </label>
 
-            <select id="godparentRole" name="role" required>
-              <option value="">Select your role</option>
-              <option value="Godfather">Godfather</option>
-              <option value="Godmother">Godmother</option>
+            <select
+              id="guestRole"
+              name="role"
+              required
+            >
+              <option value="">
+                Select your role
+              </option>
             </select>
           </div>
 
           <div class="form-field">
-            <label for="guestName">Name</label>
+            <label for="guestName">
+              Name
+            </label>
 
             <input
               type="text"
               id="guestName"
               name="name"
-              placeholder="Your full name"
+              placeholder="First name and surname"
+              autocomplete="name"
               required
             >
           </div>
 
           <fieldset class="attendance-field">
-            <legend>Will you be attending?</legend>
+            <legend>
+              Will you be attending?
+            </legend>
 
             <label>
               <input
@@ -43,7 +55,10 @@
                 value="Attending"
                 required
               >
-              <span>Joyfully accepts</span>
+
+              <span>
+                Joyfully accepts
+              </span>
             </label>
 
             <label>
@@ -53,11 +68,17 @@
                 value="Not attending"
                 required
               >
-              <span>Regretfully declines</span>
+
+              <span>
+                Regretfully declines
+              </span>
             </label>
           </fieldset>
 
-          <button type="submit" class="button">
+          <button
+            type="submit"
+            class="button"
+          >
             Submit
           </button>
 

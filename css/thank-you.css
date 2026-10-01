@@ -65,7 +65,6 @@
   max-width: 800px;
   width: 100%;
   min-height: 1000px;
-  height: auto;
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -78,24 +77,96 @@
 
 .attendees-card__content {
   display: flex;
-  justify-content: flex-start;
   flex-direction: column;
-  max-width: 500px;
+  max-width: 540px;
   width: 100%;
   text-align: center;
 }
 
 .attendees-card .section-title {
-  margin-bottom: 45px;
+  margin-bottom: 30px;
   color: #fffdf9;
   font-size: clamp(52px, 6vw, 74px);
+}
+
+.attendees-tabs {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 28px;
+  padding-bottom: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.attendees-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.attendees-tabs__button {
+  flex: 0 0 auto;
+  border: 1px solid rgba(255, 253, 249, 0.45);
+  border-radius: 100px;
+  padding: 8px 14px;
+  background: transparent;
+  color: rgba(255, 253, 249, 0.8);
+  font-family: var(--serif-font);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.attendees-tabs__button:hover {
+  border-color: #fffdf9;
+  color: #fffdf9;
+  transform: translateY(-1px);
+}
+
+.attendees-tabs__button.is-active {
+  border-color: #fffdf9;
+  background: #fffdf9;
+  color: #374F3F;
+}
+
+.attendees-tabs__count {
+  margin-left: 4px;
+  opacity: 0.75;
 }
 
 .attendees-list {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  min-height: 442px;
+  width: 100%;
+  max-height: 450px;
+  padding-right: 12px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color:
+    rgba(255, 253, 249, 0.7)
+    rgba(255, 253, 249, 0.15);
+}
+
+.attendees-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.attendees-list::-webkit-scrollbar-track {
+  border-radius: 100px;
+  background: rgba(255, 253, 249, 0.15);
+}
+
+.attendees-list::-webkit-scrollbar-thumb {
+  border-radius: 100px;
+  background: rgba(255, 253, 249, 0.7);
 }
 
 .attendees-list__item {
@@ -103,12 +174,11 @@
   grid-template-columns: 1fr auto;
   gap: 40px;
   align-items: center;
+  flex: 0 0 auto;
   padding-bottom: 20px;
   border-bottom: 1px solid rgba(255, 253, 249, 0.65);
   color: #fff;
   text-align: left;
-  opacity: 1;
-  transform: translateY(0);
   animation: attendeeFadeIn 0.35s ease both;
 }
 
@@ -123,7 +193,6 @@
   font-family: var(--serif-font);
   font-size: 20px;
   font-style: italic;
-  opacity: 1;
 }
 
 .attendees-list__loading,
@@ -134,47 +203,6 @@
   font-family: var(--serif-font);
   font-size: 17px;
   line-height: 1.5;
-}
-
-.attendees-pagination {
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 22px;
-  margin-top: 38px;
-}
-
-.attendees-pagination[hidden] {
-  display: none;
-}
-
-.attendees-pagination__button {
-  border: 0;
-  padding: 0;
-  background: transparent;
-  color: #fffdf9;
-  font-family: var(--serif-font);
-  font-size: 16px;
-  cursor: pointer;
-  transition:
-    opacity 0.25s ease,
-    transform 0.25s ease;
-}
-
-.attendees-pagination__button:hover:not(:disabled) {
-  transform: translateY(-2px);
-}
-
-.attendees-pagination__button:disabled {
-  opacity: 0.3;
-  cursor: default;
-}
-
-.attendees-pagination__count {
-  min-width: 45px;
-  color: #fffdf9;
-  font-family: var(--serif-font);
-  font-size: 16px;
   text-align: center;
 }
 
@@ -215,24 +243,39 @@
   }
 
   .attendees__container {
-    padding: 20px 20px;
+    padding: 20px;
   }
 
   .attendees-card {
     max-width: 500px;
-    min-height: 300px;
+    min-height: 600px;
     padding: 80px 19%;
     background-size: 100% 100%;
   }
 
+  .attendees-card__content {
+    max-width: 100%;
+  }
+
   .attendees-card .section-title {
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     font-size: 42px;
+  }
+
+  .attendees-tabs {
+    gap: 6px;
+    margin-bottom: 18px;
+  }
+
+  .attendees-tabs__button {
+    padding: 6px 10px;
+    font-size: 11px;
   }
 
   .attendees-list {
     gap: 10px;
-    min-height: 250px;
+    max-height: 280px;
+    padding-right: 7px;
   }
 
   .attendees-list__item {
@@ -248,13 +291,9 @@
     font-size: 12px;
   }
 
-  .attendees-pagination {
-    gap: 16px;
-    margin-top: 25px;
-  }
-
-  .attendees-pagination__button,
-  .attendees-pagination__count {
+  .attendees-list__loading,
+  .attendees-list__empty,
+  .attendees-list__error {
     font-size: 13px;
   }
 }
