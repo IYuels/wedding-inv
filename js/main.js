@@ -4,6 +4,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   const audio = document.querySelector("#weddingAudio");
   const weddingPage = document.querySelector("#weddingPage");
 
+  if (audio) {
+    audio.volume = 0.1;
+  }
+
   const sections = [
     {
       target: "#invitationSection",
