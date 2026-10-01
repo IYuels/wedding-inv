@@ -1,22 +1,23 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
     {
       "source": "/godfather-godmother",
-      "destination": "/index.html"
+      "destination": "/index"
     },
     {
       "source": "/bridesmaid",
-      "destination": "/index.html"
+      "destination": "/index"
     },
     {
       "source": "/groomsmen",
-      "destination": "/index.html"
+      "destination": "/index"
     },
     {
       "source": "/guest",
-      "destination": "/index.html"
+      "destination": "/index"
     }
   ],
   "headers": [
