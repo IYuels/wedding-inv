@@ -122,7 +122,7 @@ const STATIC_ATTENDEES = [
     isStatic: true
   },
   {
-    displayName: "A Pallara",
+    displayName: "A Palara",
     role: "Maid of Honor",
     isStatic: true
   },
