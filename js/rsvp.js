@@ -3,7 +3,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/fireba
 import {
   getFirestore,
   doc,
-  collection,
   serverTimestamp,
   runTransaction
 } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
@@ -48,6 +47,12 @@ const invitationConfigs = {
   }
 };
 
+const VALID_ATTENDANCE = [
+  "Attending",
+  "Not sure",
+  "Not attending"
+];
+
 const getInvitationType = () => {
   let path = window.location.pathname;
 
@@ -82,9 +87,10 @@ const normalizeGuestName = fullName => {
 };
 
 const hasAtLeastTwoWords = fullName => {
-  const words = cleanGuestName(fullName)
-    .split(" ")
-    .filter(Boolean);
+  const words =
+    cleanGuestName(fullName)
+      .split(" ")
+      .filter(Boolean);
 
   return words.length >= 2;
 };
@@ -122,6 +128,37 @@ const formatGuestName = fullName => {
   const parts =
     cleanName.split(" ");
 
+  const suffixes = [
+    "jr",
+    "jr.",
+    "sr",
+    "sr.",
+    "ii",
+    "iii",
+    "iv",
+    "v"
+  ];
+
+  let suffix = "";
+
+  const lastPart =
+    parts[
+      parts.length - 1
+    ];
+
+  if (
+    lastPart &&
+    suffixes.includes(
+      lastPart.toLowerCase()
+    )
+  ) {
+    suffix = parts.pop();
+  }
+
+  if (parts.length < 2) {
+    return cleanName;
+  }
+
   const surname =
     parts.pop();
 
@@ -134,14 +171,21 @@ const formatGuestName = fullName => {
       })
       .join("");
 
-  return `${initials} ${surname}`;
+  return suffix
+    ? `${initials} ${surname} ${suffix}`
+    : `${initials} ${surname}`;
 };
 
 const showError = (
   messageElement,
   text
 ) => {
-  messageElement.textContent = text;
+  if (!messageElement) {
+    return;
+  }
+
+  messageElement.textContent =
+    text;
 
   messageElement.classList.remove(
     "is-success"
@@ -296,11 +340,26 @@ const initRsvpForm = () => {
       }
 
       if (
-        !config.roles.includes(role)
+        !config.roles.includes(
+          role
+        )
       ) {
         showError(
           message,
           "Please select a valid role."
+        );
+
+        return;
+      }
+
+      if (
+        !VALID_ATTENDANCE.includes(
+          attendance
+        )
+      ) {
+        showError(
+          message,
+          "Please select your attendance."
         );
 
         return;
@@ -316,7 +375,7 @@ const initRsvpForm = () => {
           "Please enter at least your first name and surname."
         );
 
-        nameInput.focus();
+        nameInput?.focus();
 
         return;
       }
@@ -329,17 +388,20 @@ const initRsvpForm = () => {
       const originalButtonText =
         submitButton.textContent;
 
-      submitButton.disabled = true;
+      submitButton.disabled =
+        true;
 
       submitButton.textContent =
         "Checking...";
 
-      message.textContent = "";
+      if (message) {
+        message.textContent = "";
 
-      message.classList.remove(
-        "is-success",
-        "is-error"
-      );
+        message.classList.remove(
+          "is-success",
+          "is-error"
+        );
+      }
 
       try {
         const nameHash =
@@ -429,6 +491,30 @@ const initRsvpForm = () => {
 
             if (
               attendance ===
+              "Not sure"
+            ) {
+              const unsureRef =
+                doc(
+                  db,
+                  "unsureRsvps",
+                  nameHash
+                );
+
+              transaction.set(
+                unsureRef,
+                {
+                  role,
+                  name,
+                  attendance,
+                  invitationType,
+                  submittedAt:
+                    serverTimestamp()
+                }
+              );
+            }
+
+            if (
+              attendance ===
               "Not attending"
             ) {
               const declinedRef =
@@ -458,13 +544,28 @@ const initRsvpForm = () => {
           "Attending"
         ) {
           window.location.href =
-            "/thank-you";
+            "/sections/thank-you.html";
 
           return;
         }
 
-        window.location.href =
-          "/sections/declined";
+        if (
+          attendance ===
+          "Not sure"
+        ) {
+          window.location.href =
+            "/sections/not-sure.html";
+
+          return;
+        }
+
+        if (
+          attendance ===
+          "Not attending"
+        ) {
+          window.location.href =
+            "/sections/declined.html";
+        }
 
       } catch (error) {
         console.error(
@@ -481,7 +582,7 @@ const initRsvpForm = () => {
             "This name is already in the RSVP list."
           );
 
-          nameInput.focus();
+          nameInput?.focus();
         } else {
           showError(
             message,

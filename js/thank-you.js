@@ -10,6 +10,87 @@ import {
 
 import { firebaseConfig } from "./firebase-config.js";
 
+const STATIC_ATTENDEES = [
+  {
+    displayName: "S J Espinosa (Bible)",
+    role: "Bearer",
+    isStatic: true
+  },
+  {
+    displayName: "A J Zulueta (Coin)",
+    role: "Bearer",
+    isStatic: true
+  },
+  {
+    displayName: "L A Ronquillo (Ring)",
+    role: "Bearer",
+    isStatic: true
+  },
+  {
+    displayName: "B J Reyes",
+    role: "Flower Girl",
+    isStatic: true
+  },
+  {
+    displayName: "I J Espinosa",
+    role: "Flower Girl",
+    isStatic: true
+  },
+  {
+    displayName: "F E Tenedero",
+    role: "Flower Girl",
+    isStatic: true
+  },
+  {
+    displayName: "K E Gomez",
+    role: "Flower Girl",
+    isStatic: true
+  }
+];
+
+const ROLE_TABS = [
+  {
+    label: "All",
+    value: "All"
+  },
+  {
+    label: "Godfather",
+    value: "Godfather"
+  },
+  {
+    label: "Godmother",
+    value: "Godmother"
+  },
+  {
+    label: "Bridesmaid",
+    value: "Bridesmaid"
+  },
+  {
+    label: "Groomsman",
+    value: "Groomsman"
+  },
+  {
+    label: "Guest",
+    value: "Guest"
+  },
+  {
+    label: "Bearers",
+    value: "Bearer"
+  },
+  {
+    label: "Flower Girls",
+    value: "Flower Girl"
+  }
+];
+
+const FIREBASE_ROLES = [
+  "Godfather",
+  "Godmother",
+  "Bridesmaid",
+  "Groomsman",
+  "Guest"
+];
+
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
@@ -22,47 +103,53 @@ const attendeesTabs =
 const thankYouMessage =
   document.querySelector("#thankYouMessage");
 
-const ROLES = [
-  "All",
-  "Godfather",
-  "Godmother",
-  "Bridesmaid",
-  "Groomsman",
-  "Guest"
-];
+const weddingAudio =
+  document.querySelector("#weddingAudio");
 
 let attendees = [];
 let activeRole = "All";
 
-const escapeHtml = value => {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+const startWeddingAudio = async () => {
+  if (!weddingAudio) {
+    return;
+  }
+
+  weddingAudio.volume = 0.5;
+
+  try {
+    await weddingAudio.play();
+  } catch {
+    const startAudio = async () => {
+      try {
+        await weddingAudio.play();
+      } catch (error) {
+        console.warn(
+          "Wedding audio could not start:",
+          error
+        );
+      }
+    };
+
+    document.addEventListener(
+      "click",
+      startAudio,
+      {
+        once: true
+      }
+    );
+
+    document.addEventListener(
+      "touchstart",
+      startAudio,
+      {
+        once: true
+      }
+    );
+  }
 };
 
 const updateThankYouMessage = () => {
   if (!thankYouMessage) {
-    return;
-  }
-
-  const params =
-    new URLSearchParams(
-      window.location.search
-    );
-
-  const attendance =
-    params.get("attendance");
-
-  if (
-    attendance ===
-    "Not attending"
-  ) {
-    thankYouMessage.textContent =
-      "Thank you for letting us know. Although we will miss having you with us on our special day, your love, prayers, and blessing mean so much to us.";
-
     return;
   }
 
@@ -88,21 +175,20 @@ const renderTabs = () => {
 
   attendeesTabs.innerHTML = "";
 
-  ROLES.forEach(role => {
+  ROLE_TABS.forEach(tab => {
     const button =
       document.createElement(
         "button"
       );
-
-    const count =
-      getRoleCount(role);
 
     button.type = "button";
 
     button.className =
       "attendees-tabs__button";
 
-    if (role === activeRole) {
+    if (
+      tab.value === activeRole
+    ) {
       button.classList.add(
         "is-active"
       );
@@ -115,25 +201,47 @@ const renderTabs = () => {
 
     button.setAttribute(
       "aria-selected",
-      role === activeRole
+      tab.value === activeRole
         ? "true"
         : "false"
     );
 
-    button.innerHTML = `
-      ${escapeHtml(role)}
-      <span class="attendees-tabs__count">
-        ${count}
-      </span>
-    `;
+    const label =
+      document.createElement(
+        "span"
+      );
+
+    label.textContent =
+      tab.label;
+
+    const count =
+      document.createElement(
+        "span"
+      );
+
+    count.className =
+      "attendees-tabs__count";
+
+    count.textContent =
+      getRoleCount(
+        tab.value
+      );
+
+    button.appendChild(
+      label
+    );
+
+    button.appendChild(
+      count
+    );
 
     button.addEventListener(
       "click",
       () => {
-        activeRole = role;
+        activeRole =
+          tab.value;
 
         renderTabs();
-
         renderAttendees();
       }
     );
@@ -145,14 +253,15 @@ const renderTabs = () => {
 };
 
 const getFilteredAttendees = () => {
-  if (activeRole === "All") {
+  if (
+    activeRole === "All"
+  ) {
     return attendees;
   }
 
   return attendees.filter(
     attendee =>
-      attendee.role ===
-      activeRole
+      attendee.role === activeRole
   );
 };
 
@@ -173,7 +282,7 @@ const renderAttendees = () => {
   ) {
     attendeesList.innerHTML = `
       <p class="attendees-list__empty">
-        No confirmed ${escapeHtml(activeRole.toLowerCase())} attendees yet.
+        No confirmed attendees yet.
       </p>
     `;
 
@@ -193,15 +302,30 @@ const renderAttendees = () => {
       item.style.animationDelay =
         `${Math.min(index, 8) * 40}ms`;
 
-      item.innerHTML = `
-        <span class="attendees-list__name">
-          ${escapeHtml(attendee.displayName)}
-        </span>
+      const name =
+        document.createElement(
+          "span"
+        );
 
-        <span class="attendees-list__role">
-          ${escapeHtml(attendee.role)}
-        </span>
-      `;
+      name.className =
+        "attendees-list__name";
+
+      name.textContent =
+        attendee.displayName;
+
+      const role =
+        document.createElement(
+          "span"
+        );
+
+      role.className =
+        "attendees-list__role";
+
+      role.textContent =
+        attendee.role;
+
+      item.appendChild(name);
+      item.appendChild(role);
 
       attendeesList.appendChild(
         item
@@ -236,7 +360,7 @@ const loadAttendees = async () => {
         attendeesQuery
       );
 
-    attendees =
+    const firebaseAttendees =
       snapshot.docs
         .map(
           documentSnapshot => {
@@ -251,32 +375,37 @@ const loadAttendees = async () => {
         .filter(attendee => {
           return (
             attendee.displayName &&
-            ROLES.includes(
+            FIREBASE_ROLES.includes(
               attendee.role
             )
           );
         });
 
-    renderTabs();
+    attendees = [
+      ...firebaseAttendees,
+      ...STATIC_ATTENDEES
+    ];
 
+    renderTabs();
     renderAttendees();
 
   } catch (error) {
     console.error(
-      "Unable to load attendees:",
+      "Unable to load Firebase attendees:",
       error
     );
 
-    attendeesTabs.innerHTML = "";
+    attendees = [
+      ...STATIC_ATTENDEES
+    ];
 
-    attendeesList.innerHTML = `
-      <p class="attendees-list__error">
-        We couldn't load the attendee list right now.
-      </p>
-    `;
+    renderTabs();
+    renderAttendees();
   }
 };
 
 updateThankYouMessage();
+
+startWeddingAudio();
 
 loadAttendees();
