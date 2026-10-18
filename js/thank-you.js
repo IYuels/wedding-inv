@@ -12,37 +12,107 @@ import { firebaseConfig } from "./firebase-config.js";
 
 const STATIC_ATTENDEES = [
   {
-    displayName: "S J Espinosa (Bible)",
+    displayName: "A. Canlas",
+    role: "Godfather",
+    isStatic: true
+  },
+  {
+    displayName: "N. Garcia",
+    role: "Godfather",
+    isStatic: true
+  },
+  {
+    displayName: "R. Espinosa Jr.",
+    role: "Godfather",
+    isStatic: true
+  },
+  {
+    displayName: "M. V. Dizon",
+    role: "Godfather",
+    isStatic: true
+  },
+  {
+    displayName: "A. A. Paras",
+    role: "Godfather",
+    isStatic: true
+  },
+  {
+    displayName: "A. Duldulao",
+    role: "Godfather",
+    isStatic: true
+  },
+  {
+    displayName: "M. Dayan.",
+    role: "Godfather",
+    isStatic: true
+  },
+  {
+    displayName: "A. Quiambao",
+    role: "Godmother",
+    isStatic: true
+  },
+  {
+    displayName: "E. Jimenez",
+    role: "Godmother",
+    isStatic: true
+  },
+  {
+    displayName: "V. M. Manlutac",
+    role: "Godmother",
+    isStatic: true
+  },
+  {
+    displayName: "A. Moriones",
+    role: "Godmother",
+    isStatic: true
+  },
+  {
+    displayName: "R. Duldulao",
+    role: "Godmother",
+    isStatic: true
+  },
+  {
+    displayName: "E. Salvatierra",
+    role: "Godmother",
+    isStatic: true
+  },
+  {
+    displayName: "M. E. Espinosa",
+    role: "Godmother",
+    isStatic: true
+  },
+  {
+    displayName: "S. J Espinosa (Bible)",
     role: "Bearer",
     isStatic: true
   },
   {
-    displayName: "A J Zulueta (Coin)",
+    displayName: "A. J. Zulueta (Coin)",
     role: "Bearer",
     isStatic: true
   },
   {
-    displayName: "L A Ronquillo (Ring)",
+    displayName: "L. A. Ronquillo (Ring)",
     role: "Bearer",
     isStatic: true
   },
   {
-    displayName: "B J Reyes",
+    displayName: "B. J. Reyes",
     role: "Flower Girl",
     isStatic: true
   },
   {
-    displayName: "I J Espinosa",
+    displayName: "I. J. Espinosa",
     role: "Flower Girl",
     isStatic: true
   },
   {
-    displayName: "F E Tenedero",
+    displayName: "F. E. Tenedero",
     role: "Flower Girl",
     isStatic: true
   },
   {
-    displayName: "K E Gomez",
+    displayName: "K. E. Gomez",
     role: "Flower Girl",
     isStatic: true
   }
