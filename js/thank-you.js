@@ -120,6 +120,16 @@ const STATIC_ATTENDEES = [
     displayName: "K. E. Gomez",
     role: "Flower Girl",
     isStatic: true
+  },
+  {
+    displayName: "A Pallara",
+    role: "Maid of Honor",
+    isStatic: true
+  },
+  {
+    displayName: "G Arceo Jr.",
+    role: "Best Man",
+    isStatic: true
   }
 ];
 
@@ -135,6 +145,14 @@ const ROLE_TABS = [
   {
     label: "Godmother",
     value: "Godmother"
+  },
+  {
+    label: "Maid of Honor",
+    value: "Maid of Honor"
+  },
+  {
+    label: "Best Man",
+    value: "Best Man"
   },
   {
     label: "Bridesmaid",
