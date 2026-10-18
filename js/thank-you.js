@@ -82,17 +82,17 @@ const STATIC_ATTENDEES = [
     isStatic: true
   },
   {
-    displayName: "S J Espinosa (Coin)",
+    displayName: "S J Espinosa (Bible)",
     role: "Bearer",
     isStatic: true
   },
   {
-    displayName: "A J Zulueta (Herald/Banner)",
+    displayName: "A J Zulueta (Coin)",
     role: "Bearer",
     isStatic: true
   },
   {
-    displayName: "L A Ronquillo (Bible)",
+    displayName: "L A Ronquillo (Herald/Banner)",
     role: "Bearer",
     isStatic: true
   },

@@ -40,7 +40,7 @@ const invitationConfigs = {
 
   "/guest": {
     message:
-      "We would be delighted to celebrate our wedding day with you. Your presence would make this special moment even more meaningful to us.",
+      "We would be delighted to celebrate our wedding day with you. As our catering arrangements are limited, we kindly ask that only the invited guest attend. Thank you for understanding, and we truly look forward to sharing this special day with you.",
     roles: [
       "Guest"
     ]
