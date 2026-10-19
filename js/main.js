@@ -18,6 +18,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       file: "/sections/dress-code.html"
     },
     {
+      target: "#venueSection",
+      file: "/sections/venue.html"
+    },
+    {
       target: "#rsvpSection",
       file: "/sections/rsvp.html"
     }
@@ -62,32 +66,33 @@ document.addEventListener("DOMContentLoaded", async () => {
           "weddingSectionsLoaded"
         )
       );
-
     } catch (error) {
       console.error(
         "Wedding sections failed to load:",
         error
       );
 
-      weddingPage.innerHTML = `
-        <div
-          style="
-            min-height:100vh;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            padding:40px;
-            text-align:center;
-          "
-        >
-          <div>
-            <h2>Unable to load invitation</h2>
-            <p>
-              Please refresh the page and try again.
-            </p>
+      if (weddingPage) {
+        weddingPage.innerHTML = `
+          <div
+            style="
+              min-height:100vh;
+              display:flex;
+              align-items:center;
+              justify-content:center;
+              padding:40px;
+              text-align:center;
+            "
+          >
+            <div>
+              <h2>Unable to load invitation</h2>
+              <p>
+                Please refresh the page and try again.
+              </p>
+            </div>
           </div>
-        </div>
-      `;
+        `;
+      }
 
       sectionsLoaded = true;
     }
