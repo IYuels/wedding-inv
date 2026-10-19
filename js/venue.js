@@ -10,87 +10,50 @@ document.addEventListener(
       return;
     }
 
-    const weddingEvent = {
-      title: "Rex & Trisha's Wedding",
-
-      start:
-        "YYYY-MM-DDTHH:MM:SS",
-
-      end:
-        "YYYY-MM-DDTHH:MM:SS",
-
-      location:
-        "Venue Name, Full Address",
-
-      description:
-        "Join us as we celebrate the wedding of Rex and Trisha."
+    const escapeIcs = value => {
+      return String(value)
+        .replace(/\\/g, "\\\\")
+        .replace(/\n/g, "\\n")
+        .replace(/,/g, "\\,")
+        .replace(/;/g, "\\;");
     };
-
-    const formatCalendarDate =
-      dateString => {
-        const date =
-          new Date(dateString);
-
-        if (
-          Number.isNaN(
-            date.getTime()
-          )
-        ) {
-          return null;
-        }
-
-        return date
-          .toISOString()
-          .replace(/[-:]/g, "")
-          .replace(/\.\d{3}/, "");
-      };
 
     calendarButton.addEventListener(
       "click",
       () => {
-        const start =
-          formatCalendarDate(
-            weddingEvent.start
-          );
+        const title =
+          "Rex & Trisha's Wedding";
 
-        const end =
-          formatCalendarDate(
-            weddingEvent.end
-          );
+        const location =
+          "San Sebastian Parish Church, Tarlac City, Tarlac / L. Paras Pavilion, Tarlac City, Tarlac";
 
-        if (!start || !end) {
-          console.warn(
-            "Please update the wedding date and time in venue.js."
-          );
-
-          return;
-        }
-
-        const escapeIcs = value => {
-          return String(value)
-            .replace(/\\/g, "\\\\")
-            .replace(/\n/g, "\\n")
-            .replace(/,/g, "\\,")
-            .replace(/;/g, "\\;");
-        };
+        const description = [
+          "Join us as we celebrate the wedding of Rex and Trisha.",
+          "",
+          "Ceremony:",
+          "San Sebastian Parish Church",
+          "FH9V+QR9, San Sebastian, Tarlac City, 2300 Tarlac",
+          "",
+          "Reception:",
+          "L. Paras Pavilion",
+          "FHCW+8GX, Don Gregorio Avenue, Cor. Calle Fausto, San Sebastian Subdivision, Tarlac City, 2300 Tarlac"
+        ].join("\n");
 
         const icsContent = [
           "BEGIN:VCALENDAR",
           "VERSION:2.0",
           "PRODID:-//Rex and Trisha Wedding//EN",
           "CALSCALE:GREGORIAN",
+          "METHOD:PUBLISH",
           "BEGIN:VEVENT",
-          `DTSTART:${start}`,
-          `DTEND:${end}`,
-          `SUMMARY:${escapeIcs(
-            weddingEvent.title
-          )}`,
-          `LOCATION:${escapeIcs(
-            weddingEvent.location
-          )}`,
-          `DESCRIPTION:${escapeIcs(
-            weddingEvent.description
-          )}`,
+          "UID:rex-trisha-wedding-20261212",
+          "DTSTAMP:20261020T000000Z",
+          "DTSTART;VALUE=DATE:20261212",
+          "DTEND;VALUE=DATE:20261213",
+          `SUMMARY:${escapeIcs(title)}`,
+          `LOCATION:${escapeIcs(location)}`,
+          `DESCRIPTION:${escapeIcs(description)}`,
+          "STATUS:CONFIRMED",
           "END:VEVENT",
           "END:VCALENDAR"
         ].join("\r\n");
@@ -127,9 +90,11 @@ document.addEventListener(
 
         link.remove();
 
-        URL.revokeObjectURL(
-          url
-        );
+        window.setTimeout(() => {
+          URL.revokeObjectURL(
+            url
+          );
+        }, 1000);
       }
     );
   }
