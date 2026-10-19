@@ -12,6 +12,24 @@ import { firebaseConfig } from "./firebase-config.js";
 
 const STATIC_ATTENDEES = [
   {
+    displayName: "R. Espinosa",
+    role: "Parent",
+    categories: [
+      "Parent"
+    ],
+    parentGroup: "Groom's Parent",
+    isStatic: true
+  },
+  {
+    displayName: "G. Espinosa",
+    role: "Parent",
+    categories: [
+      "Parent"
+    ],
+    parentGroup: "Groom's Parent",
+    isStatic: true
+  },
+  {
     displayName: "A. Canlas",
     role: "Godfather",
     isStatic: true
@@ -64,6 +82,11 @@ const STATIC_ATTENDEES = [
   {
     displayName: "A. Moriones",
     role: "Godmother",
+    categories: [
+      "Godmother",
+      "Parent"
+    ],
+    parentGroup: "Bride's Parent",
     isStatic: true
   },
   {
@@ -139,6 +162,10 @@ const ROLE_TABS = [
     value: "All"
   },
   {
+    label: "Parents",
+    value: "Parent"
+  },
+  {
     label: "Godfather",
     value: "Godfather"
   },
@@ -188,16 +215,24 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const attendeesList =
-  document.querySelector("#attendeesList");
+  document.querySelector(
+    "#attendeesList"
+  );
 
 const attendeesTabs =
-  document.querySelector("#attendeesTabs");
+  document.querySelector(
+    "#attendeesTabs"
+  );
 
 const thankYouMessage =
-  document.querySelector("#thankYouMessage");
+  document.querySelector(
+    "#thankYouMessage"
+  );
 
 const weddingAudio =
-  document.querySelector("#weddingAudio");
+  document.querySelector(
+    "#weddingAudio"
+  );
 
 let attendees = [];
 let activeRole = "All";
@@ -250,6 +285,23 @@ const updateThankYouMessage = () => {
     "Thank you for saying yes to celebrating this beautiful day with us. Your presence, love, and blessing mean more than words can say, and we cannot wait to share this special moment with you.";
 };
 
+const attendeeBelongsToRole = (
+  attendee,
+  role
+) => {
+  if (
+    Array.isArray(
+      attendee.categories
+    )
+  ) {
+    return attendee.categories.includes(
+      role
+    );
+  }
+
+  return attendee.role === role;
+};
+
 const getRoleCount = role => {
   if (role === "All") {
     return attendees.length;
@@ -257,7 +309,10 @@ const getRoleCount = role => {
 
   return attendees.filter(
     attendee =>
-      attendee.role === role
+      attendeeBelongsToRole(
+        attendee,
+        role
+      )
   ).length;
 };
 
@@ -354,9 +409,32 @@ const getFilteredAttendees = () => {
 
   return attendees.filter(
     attendee =>
-      attendee.role === activeRole
+      attendeeBelongsToRole(
+        attendee,
+        activeRole
+      )
   );
 };
+
+const getAttendeeRoleLabel =
+  attendee => {
+    if (
+      activeRole === "Parent" &&
+      attendee.parentGroup
+    ) {
+      return attendee.parentGroup;
+    }
+
+    if (
+      activeRole === "All" &&
+      attendee.parentGroup &&
+      attendee.role === "Parent"
+    ) {
+      return attendee.parentGroup;
+    }
+
+    return attendee.role;
+  };
 
 const renderAttendees = () => {
   if (!attendeesList) {
@@ -415,10 +493,17 @@ const renderAttendees = () => {
         "attendees-list__role";
 
       role.textContent =
-        attendee.role;
+        getAttendeeRoleLabel(
+          attendee
+        );
 
-      item.appendChild(name);
-      item.appendChild(role);
+      item.appendChild(
+        name
+      );
+
+      item.appendChild(
+        role
+      );
 
       attendeesList.appendChild(
         item

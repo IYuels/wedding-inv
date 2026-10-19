@@ -10,73 +10,102 @@ document.addEventListener(
       return;
     }
 
-    const isIOS =
-      /iPad|iPhone|iPod/.test(
-        navigator.userAgent
-      ) ||
-      (
-        navigator.platform ===
-          "MacIntel" &&
-        navigator.maxTouchPoints > 1
-      );
+    const weddingEvent = {
+      title:
+        "Rex & Trisha's Wedding",
 
-    const isAndroid =
-      /Android/i.test(
-        navigator.userAgent
-      );
+      /*
+       * UPDATE THESE ONCE
+       * YOUR FINAL TIMES ARE SET.
+       */
+      start:
+        "2026-12-12T14:00:00+08:00",
 
-    const googleCalendarUrl = () => {
-      const params =
-        new URLSearchParams({
-          action: "TEMPLATE",
+      end:
+        "2026-12-12T20:00:00+08:00",
 
-          text:
-            "Rex & Trisha's Wedding",
+      ceremony:
+        "San Sebastian Parish Church",
 
-          dates:
-            "20261212/20261213",
+      ceremonyAddress:
+        "FH9V+QR9, San Sebastian, Tarlac City, 2300 Tarlac",
 
-          location:
-            "San Sebastian Parish Church, San Sebastian, Tarlac City, 2300 Tarlac",
+      reception:
+        "L. Paras Pavilion",
 
-          details: [
-            "We would love to celebrate our wedding day with you.",
-            "",
-            "Ceremony:",
-            "San Sebastian Parish Church",
-            "FH9V+QR9, San Sebastian, Tarlac City, 2300 Tarlac",
-            "",
-            "Reception:",
-            "L. Paras Pavilion",
-            "FHCW+8GX, Don Gregorio Avenue, Cor. Calle Fausto, San Sebastian Subdivision, Tarlac City, 2300 Tarlac"
-          ].join("\n")
-        });
-
-      return (
-        "https://calendar.google.com/calendar/render?" +
-        params.toString()
-      );
+      receptionAddress:
+        "FHCW+8GX, Don Gregorio Avenue, Cor. Calle Fausto, San Sebastian Subdivision, Tarlac City, 2300 Tarlac"
     };
+
+    const formatGoogleDate =
+      dateString => {
+        const date =
+          new Date(
+            dateString
+          );
+
+        return date
+          .toISOString()
+          .replace(/[-:]/g, "")
+          .replace(/\.\d{3}/, "");
+      };
+
+    const getGoogleCalendarUrl =
+      () => {
+        const start =
+          formatGoogleDate(
+            weddingEvent.start
+          );
+
+        const end =
+          formatGoogleDate(
+            weddingEvent.end
+          );
+
+        const details = [
+          "We would love to celebrate our wedding day with you.",
+          "",
+          "Ceremony:",
+          weddingEvent.ceremony,
+          weddingEvent.ceremonyAddress,
+          "",
+          "Reception:",
+          weddingEvent.reception,
+          weddingEvent.receptionAddress
+        ].join("\n");
+
+        const location = [
+          weddingEvent.ceremony,
+          weddingEvent.ceremonyAddress
+        ].join(", ");
+
+        const params =
+          new URLSearchParams({
+            action:
+              "TEMPLATE",
+
+            text:
+              weddingEvent.title,
+
+            dates:
+              `${start}/${end}`,
+
+            location,
+
+            details
+          });
+
+        return (
+          "https://calendar.google.com/calendar/render?" +
+          params.toString()
+        );
+      };
 
     calendarButton.addEventListener(
       "click",
       () => {
-        if (isIOS) {
-          window.location.href =
-            "/assets/rex-trisha-wedding.ics";
-
-          return;
-        }
-
-        if (isAndroid) {
-          window.location.href =
-            googleCalendarUrl();
-
-          return;
-        }
-
         window.location.href =
-          "/assets/rex-trisha-wedding.ics";
+          getGoogleCalendarUrl();
       }
     );
   }
