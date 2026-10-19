@@ -10,91 +10,73 @@ document.addEventListener(
       return;
     }
 
-    const escapeIcs = value => {
-      return String(value)
-        .replace(/\\/g, "\\\\")
-        .replace(/\n/g, "\\n")
-        .replace(/,/g, "\\,")
-        .replace(/;/g, "\\;");
+    const isIOS =
+      /iPad|iPhone|iPod/.test(
+        navigator.userAgent
+      ) ||
+      (
+        navigator.platform ===
+          "MacIntel" &&
+        navigator.maxTouchPoints > 1
+      );
+
+    const isAndroid =
+      /Android/i.test(
+        navigator.userAgent
+      );
+
+    const googleCalendarUrl = () => {
+      const params =
+        new URLSearchParams({
+          action: "TEMPLATE",
+
+          text:
+            "Rex & Trisha's Wedding",
+
+          dates:
+            "20261212/20261213",
+
+          location:
+            "San Sebastian Parish Church, San Sebastian, Tarlac City, 2300 Tarlac",
+
+          details: [
+            "We would love to celebrate our wedding day with you.",
+            "",
+            "Ceremony:",
+            "San Sebastian Parish Church",
+            "FH9V+QR9, San Sebastian, Tarlac City, 2300 Tarlac",
+            "",
+            "Reception:",
+            "L. Paras Pavilion",
+            "FHCW+8GX, Don Gregorio Avenue, Cor. Calle Fausto, San Sebastian Subdivision, Tarlac City, 2300 Tarlac"
+          ].join("\n")
+        });
+
+      return (
+        "https://calendar.google.com/calendar/render?" +
+        params.toString()
+      );
     };
 
     calendarButton.addEventListener(
       "click",
       () => {
-        const title =
-          "Rex & Trisha's Wedding";
+        if (isIOS) {
+          window.location.href =
+            "/assets/rex-trisha-wedding.ics";
 
-        const location =
-          "San Sebastian Parish Church, Tarlac City, Tarlac / L. Paras Pavilion, Tarlac City, Tarlac";
+          return;
+        }
 
-        const description = [
-          "Join us as we celebrate the wedding of Rex and Trisha.",
-          "",
-          "Ceremony:",
-          "San Sebastian Parish Church",
-          "FH9V+QR9, San Sebastian, Tarlac City, 2300 Tarlac",
-          "",
-          "Reception:",
-          "L. Paras Pavilion",
-          "FHCW+8GX, Don Gregorio Avenue, Cor. Calle Fausto, San Sebastian Subdivision, Tarlac City, 2300 Tarlac"
-        ].join("\n");
+        if (isAndroid) {
+          window.location.href =
+            googleCalendarUrl();
 
-        const icsContent = [
-          "BEGIN:VCALENDAR",
-          "VERSION:2.0",
-          "PRODID:-//Rex and Trisha Wedding//EN",
-          "CALSCALE:GREGORIAN",
-          "METHOD:PUBLISH",
-          "BEGIN:VEVENT",
-          "UID:rex-trisha-wedding-20261212",
-          "DTSTAMP:20261020T000000Z",
-          "DTSTART;VALUE=DATE:20261212",
-          "DTEND;VALUE=DATE:20261213",
-          `SUMMARY:${escapeIcs(title)}`,
-          `LOCATION:${escapeIcs(location)}`,
-          `DESCRIPTION:${escapeIcs(description)}`,
-          "STATUS:CONFIRMED",
-          "END:VEVENT",
-          "END:VCALENDAR"
-        ].join("\r\n");
+          return;
+        }
 
-        const blob =
-          new Blob(
-            [icsContent],
-            {
-              type:
-                "text/calendar;charset=utf-8"
-            }
-          );
-
-        const url =
-          URL.createObjectURL(
-            blob
-          );
-
-        const link =
-          document.createElement(
-            "a"
-          );
-
-        link.href = url;
-
-        link.download =
-          "rex-and-trisha-wedding.ics";
-
-        document.body.appendChild(
-          link
-        );
-
-        link.click();
-
-        link.remove();
-
-        window.setTimeout(() => {
-          URL.revokeObjectURL(
-            url
-          );
-        }, 1000);
+        window.location.href =
+          "/assets/rex-trisha-wedding.ics";
       }
     );
   }
