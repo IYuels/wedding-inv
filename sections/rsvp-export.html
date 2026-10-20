@@ -8,6 +8,11 @@
     content="width=device-width, initial-scale=1.0"
   >
 
+  <meta
+    name="robots"
+    content="noindex, nofollow"
+  >
+
   <title>RSVP Manager</title>
 
   <style>
@@ -29,7 +34,7 @@
     }
 
     .rsvp-manager {
-      max-width: 1000px;
+      max-width: 1100px;
       margin: 0 auto;
     }
 
@@ -38,18 +43,32 @@
       padding: 30px;
       border-radius: 14px;
       background: #fff;
-      box-shadow:
-        0 15px 40px
-        rgba(0, 0, 0, 0.06);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.06);
     }
 
     .rsvp-manager__header h1 {
       margin: 0 0 10px;
+      font-size: 32px;
     }
 
-    .rsvp-manager__header p {
+    .rsvp-manager__header > p {
       margin: 0 0 20px;
       line-height: 1.5;
+    }
+
+    .rsvp-manager__stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .rsvp-stat {
+      padding: 8px 14px;
+      border-radius: 100px;
+      background: #f4f1e8;
+      font-size: 13px;
+      font-weight: 600;
     }
 
     .rsvp-manager__actions {
@@ -68,13 +87,13 @@
       cursor: pointer;
     }
 
+    .button--secondary {
+      background: #8b725c;
+    }
+
     .button:disabled {
       opacity: 0.5;
       cursor: not-allowed;
-    }
-
-    .button--secondary {
-      background: #8b725c;
     }
 
     .rsvp-message {
@@ -86,18 +105,17 @@
       overflow: hidden;
       border-radius: 14px;
       background: #fff;
-      box-shadow:
-        0 15px 40px
-        rgba(0, 0, 0, 0.06);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.06);
     }
 
     .rsvp-list__heading {
       display: grid;
       grid-template-columns:
-        minmax(0, 1fr)
-        180px
-        120px
-        100px;
+        minmax(200px, 1.5fr)
+        minmax(120px, 1fr)
+        130px
+        100px
+        90px;
       gap: 20px;
       padding: 16px 20px;
       background: #304f40;
@@ -106,42 +124,74 @@
       font-weight: 600;
     }
 
-    .rsvp-list__role {
-      border-bottom:
-        1px solid #e8e2d7;
+    .rsvp-list__group {
+      border-bottom: 1px solid #e8e2d7;
     }
 
-    .rsvp-list__role-title {
+    .rsvp-list__group:last-child {
+      border-bottom: 0;
+    }
+
+    .rsvp-list__group-title {
       margin: 0;
-      padding: 18px 20px 8px;
+      padding: 20px 20px 10px;
       color: #8b725c;
-      font-size: 18px;
+      font-size: 19px;
     }
 
     .rsvp-list__item {
       display: grid;
       grid-template-columns:
-        minmax(0, 1fr)
-        180px
-        120px
-        100px;
+        minmax(200px, 1.5fr)
+        minmax(120px, 1fr)
+        130px
+        100px
+        90px;
       gap: 20px;
       align-items: center;
-      padding: 13px 20px;
+      padding: 14px 20px;
     }
 
     .rsvp-list__item + .rsvp-list__item {
-      border-top:
-        1px solid #f0ece4;
+      border-top: 1px solid #f0ece4;
     }
 
     .rsvp-list__name {
       font-weight: 600;
     }
 
-    .rsvp-list__status {
-      color: #496957;
+    .rsvp-list__role {
+      color: #555;
       font-size: 14px;
+    }
+
+    .rsvp-list__status {
+      display: inline-flex;
+      width: fit-content;
+      border-radius: 100px;
+      padding: 5px 9px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .rsvp-list__status--attending {
+      background: #e6f0e9;
+      color: #345943;
+    }
+
+    .rsvp-list__status--unsure {
+      background: #f5edda;
+      color: #876c31;
+    }
+
+    .rsvp-list__status--declined {
+      background: #f5e4e4;
+      color: #934848;
+    }
+
+    .rsvp-list__status--static {
+      background: #ececec;
+      color: #666;
     }
 
     .rsvp-list__source {
@@ -150,8 +200,7 @@
     }
 
     .delete-button {
-      border:
-        1px solid #b85b5b;
+      border: 1px solid #b85b5b;
       border-radius: 100px;
       padding: 7px 12px;
       background: transparent;
@@ -179,21 +228,28 @@
       text-align: center;
     }
 
-    @media (max-width: 700px) {
+    @media (max-width: 760px) {
+      body {
+        padding: 20px 12px;
+      }
+
+      .rsvp-manager__header {
+        padding: 22px;
+      }
+
       .rsvp-list__heading {
         display: none;
       }
 
       .rsvp-list__item {
         grid-template-columns:
-          1fr auto;
-        gap: 8px 15px;
+          minmax(0, 1fr)
+          auto;
+        gap: 7px 15px;
       }
 
-      .rsvp-list__name {
-        grid-column: 1;
-      }
-
+      .rsvp-list__name,
+      .rsvp-list__role,
       .rsvp-list__status,
       .rsvp-list__source {
         grid-column: 1;
@@ -201,7 +257,7 @@
 
       .delete-button {
         grid-column: 2;
-        grid-row: 1 / span 3;
+        grid-row: 1 / span 4;
       }
     }
   </style>
@@ -212,13 +268,19 @@
   <main class="rsvp-manager">
 
     <div class="rsvp-manager__header">
+
       <h1>
         RSVP Manager
       </h1>
 
       <p>
-        View, download, and manage the confirmed attendance list.
+        View full names, RSVP responses, roles, and manage the guest list.
       </p>
+
+      <div
+        class="rsvp-manager__stats"
+        id="rsvpStats"
+      ></div>
 
       <div class="rsvp-manager__actions">
 
@@ -244,21 +306,25 @@
         class="rsvp-message"
         id="exportMessage"
       ></p>
+
     </div>
 
     <div class="rsvp-list">
 
       <div class="rsvp-list__heading">
-        <span>Name</span>
+        <span>Full Name</span>
         <span>Role</span>
+        <span>Response</span>
         <span>Source</span>
         <span>Action</span>
       </div>
 
       <div id="rsvpList">
+
         <p class="rsvp-list__loading">
           Loading RSVP list...
         </p>
+
       </div>
 
     </div>

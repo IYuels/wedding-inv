@@ -4,8 +4,6 @@ import {
   getFirestore,
   collection,
   getDocs,
-  query,
-  orderBy,
   doc,
   writeBatch
 } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
@@ -13,9 +11,7 @@ import {
 import { firebaseConfig } from "./firebase-config.js";
 
 const app =
-  initializeApp(
-    firebaseConfig
-  );
+  initializeApp(firebaseConfig);
 
 const db =
   getFirestore(app);
@@ -40,6 +36,11 @@ const rsvpList =
     "#rsvpList"
   );
 
+const rsvpStats =
+  document.querySelector(
+    "#rsvpStats"
+  );
+
 const ROLE_ORDER = [
   "Parent",
   "Godfather",
@@ -55,160 +56,379 @@ const ROLE_ORDER = [
 
 const STATIC_ATTENDEES = [
   {
-    displayName:
-      "R. Espinosa",
-    role:
-      "Parent",
-    isStatic:
-      true
+    fullName: "R. Espinosa",
+    displayName: "R. Espinosa",
+    role: "Parent",
+    categories: [
+      "Parent"
+    ],
+    attendance: "Static",
+    isStatic: true
   },
   {
-    displayName:
-      "G. Espinosa",
-    role:
-      "Parent",
-    isStatic:
-      true
+    fullName: "G. Espinosa",
+    displayName: "G. Espinosa",
+    role: "Parent",
+    categories: [
+      "Parent"
+    ],
+    attendance: "Static",
+    isStatic: true
   },
   {
-    displayName:
-      "A. Moriones",
-    role:
-      "Parent",
-    isStatic:
-      true
+    fullName: "A. Canlas",
+    displayName: "A. Canlas",
+    role: "Godfather",
+    attendance: "Static",
+    isStatic: true
   },
   {
-    displayName:
-      "A. Palara",
-    role:
-      "Maid of Honor",
-    isStatic:
-      true
+    fullName: "N. Garcia",
+    displayName: "N. Garcia",
+    role: "Godfather",
+    attendance: "Static",
+    isStatic: true
   },
   {
-    displayName:
-      "G. Arceo Jr.",
-    role:
-      "Best Man",
-    isStatic:
-      true
+    fullName: "R. Espinosa Jr.",
+    displayName: "R. Espinosa Jr.",
+    role: "Godfather",
+    attendance: "Static",
+    isStatic: true
   },
   {
-    displayName:
-      "S. J. Espinosa (Bible)",
-    role:
-      "Bearer",
-    isStatic:
-      true
+    fullName: "M. V. Dizon",
+    displayName: "M. V. Dizon",
+    role: "Godfather",
+    attendance: "Static",
+    isStatic: true
   },
   {
-    displayName:
-      "A. J. Zulueta (Coin)",
-    role:
-      "Bearer",
-    isStatic:
-      true
+    fullName: "A. A. Paras",
+    displayName: "A. A. Paras",
+    role: "Godfather",
+    attendance: "Static",
+    isStatic: true
   },
   {
-    displayName:
-      "L. A. Ronquillo (Herald/Banner)",
-    role:
-      "Bearer",
-    isStatic:
-      true
+    fullName: "A. Duldulao",
+    displayName: "A. Duldulao",
+    role: "Godfather",
+    attendance: "Static",
+    isStatic: true
   },
   {
-    displayName:
-      "A. T. Fabros (Ring)",
-    role:
-      "Bearer",
-    isStatic:
-      true
+    fullName: "M. Dayan",
+    displayName: "M. Dayan",
+    role: "Godfather",
+    attendance: "Static",
+    isStatic: true
   },
   {
-    displayName:
-      "B. J. Reyes",
-    role:
-      "Flower Girl",
-    isStatic:
-      true
+    fullName: "A. Quiambao",
+    displayName: "A. Quiambao",
+    role: "Godmother",
+    attendance: "Static",
+    isStatic: true
   },
   {
-    displayName:
-      "I. J. Espinosa",
-    role:
-      "Flower Girl",
-    isStatic:
-      true
+    fullName: "E. Jimenez",
+    displayName: "E. Jimenez",
+    role: "Godmother",
+    attendance: "Static",
+    isStatic: true
   },
   {
-    displayName:
-      "F. E. Tenedero",
-    role:
-      "Flower Girl",
-    isStatic:
-      true
+    fullName: "V. M. Manlutac",
+    displayName: "V. M. Manlutac",
+    role: "Godmother",
+    attendance: "Static",
+    isStatic: true
   },
   {
-    displayName:
-      "K. E. Gomez",
-    role:
-      "Flower Girl",
-    isStatic:
-      true
+    fullName: "A. Moriones",
+    displayName: "A. Moriones",
+    role: "Godmother",
+    categories: [
+      "Godmother",
+      "Parent"
+    ],
+    attendance: "Static",
+    isStatic: true
+  },
+  {
+    fullName: "R. Duldulao",
+    displayName: "R. Duldulao",
+    role: "Godmother",
+    attendance: "Static",
+    isStatic: true
+  },
+  {
+    fullName: "E. Salvatierra",
+    displayName: "E. Salvatierra",
+    role: "Godmother",
+    attendance: "Static",
+    isStatic: true
+  },
+  {
+    fullName: "M. E. Espinosa",
+    displayName: "M. E. Espinosa",
+    role: "Godmother",
+    attendance: "Static",
+    isStatic: true
+  },
+  {
+    fullName: "A. Palara",
+    displayName: "A. Palara",
+    role: "Maid of Honor",
+    attendance: "Static",
+    isStatic: true
+  },
+  {
+    fullName: "G. Arceo Jr.",
+    displayName: "G. Arceo Jr.",
+    role: "Best Man",
+    attendance: "Static",
+    isStatic: true
+  },
+  {
+    fullName: "S. J. Espinosa",
+    displayName: "S. J. Espinosa (Bible)",
+    role: "Bearer",
+    attendance: "Static",
+    isStatic: true
+  },
+  {
+    fullName: "A. J. Zulueta",
+    displayName: "A. J. Zulueta (Coin)",
+    role: "Bearer",
+    attendance: "Static",
+    isStatic: true
+  },
+  {
+    fullName: "L. A. Ronquillo",
+    displayName: "L. A. Ronquillo (Herald/Banner)",
+    role: "Bearer",
+    attendance: "Static",
+    isStatic: true
+  },
+  {
+    fullName: "A. T. Fabros",
+    displayName: "A. T. Fabros (Ring)",
+    role: "Bearer",
+    attendance: "Static",
+    isStatic: true
+  },
+  {
+    fullName: "B. J. Reyes",
+    displayName: "B. J. Reyes",
+    role: "Flower Girl",
+    attendance: "Static",
+    isStatic: true
+  },
+  {
+    fullName: "I. J. Espinosa",
+    displayName: "I. J. Espinosa",
+    role: "Flower Girl",
+    attendance: "Static",
+    isStatic: true
+  },
+  {
+    fullName: "F. E. Tenedero",
+    displayName: "F. E. Tenedero",
+    role: "Flower Girl",
+    attendance: "Static",
+    isStatic: true
+  },
+  {
+    fullName: "K. E. Gomez",
+    displayName: "K. E. Gomez",
+    role: "Flower Girl",
+    attendance: "Static",
+    isStatic: true
   }
 ];
 
 let attendees = [];
 
-const getRoleIndex =
-  role => {
-    const index =
-      ROLE_ORDER.indexOf(
-        role
+const attendeeBelongsToRole = (
+  attendee,
+  role
+) => {
+  if (
+    Array.isArray(
+      attendee.categories
+    )
+  ) {
+    return attendee.categories.includes(
+      role
+    );
+  }
+
+  return attendee.role === role;
+};
+
+const getRoleIndex = role => {
+  const index =
+    ROLE_ORDER.indexOf(role);
+
+  return index === -1
+    ? 999
+    : index;
+};
+
+const sortAttendees = list => {
+  return [...list].sort(
+    (a, b) => {
+      const roleDifference =
+        getRoleIndex(a.role) -
+        getRoleIndex(b.role);
+
+      if (
+        roleDifference !== 0
+      ) {
+        return roleDifference;
+      }
+
+      return (
+        a.fullName ||
+        a.displayName
+      ).localeCompare(
+        b.fullName ||
+        b.displayName
+      );
+    }
+  );
+};
+
+const getCollectionData =
+  async (
+    collectionName,
+    attendance
+  ) => {
+    const snapshot =
+      await getDocs(
+        collection(
+          db,
+          collectionName
+        )
       );
 
-    return index === -1
-      ? 999
-      : index;
-  };
+    return snapshot.docs.map(
+      documentSnapshot => {
+        const data =
+          documentSnapshot.data();
 
-const sortAttendees =
-  list => {
-    return [...list].sort(
-      (a, b) => {
-        const roleDifference =
-          getRoleIndex(
-            a.role
-          ) -
-          getRoleIndex(
-            b.role
-          );
+        return {
+          id:
+            documentSnapshot.id,
 
-        if (
-          roleDifference !== 0
-        ) {
-          return roleDifference;
-        }
+          fullName:
+            data.name ||
+            "Unknown",
 
-        return a.displayName.localeCompare(
-          b.displayName
-        );
+          displayName:
+            data.name ||
+            "Unknown",
+
+          role:
+            data.role ||
+            "Guest",
+
+          attendance,
+
+          collectionName,
+
+          submittedAt:
+            data.submittedAt,
+
+          isStatic:
+            false
+        };
       }
     );
   };
 
-const escapeCsv = value => {
-  const text =
-    String(
-      value ?? ""
+const getStatusClass =
+  attendance => {
+    if (
+      attendance === "Attending"
+    ) {
+      return "attending";
+    }
+
+    if (
+      attendance === "Not sure"
+    ) {
+      return "unsure";
+    }
+
+    if (
+      attendance === "Not attending"
+    ) {
+      return "declined";
+    }
+
+    return "static";
+  };
+
+const renderStats = () => {
+  if (!rsvpStats) {
+    return;
+  }
+
+  const firebaseResponses =
+    attendees.filter(
+      attendee =>
+        !attendee.isStatic
     );
 
-  return `"${text.replaceAll(
-    '"',
-    '""'
-  )}"`;
+  const attending =
+    firebaseResponses.filter(
+      attendee =>
+        attendee.attendance ===
+        "Attending"
+    ).length;
+
+  const unsure =
+    firebaseResponses.filter(
+      attendee =>
+        attendee.attendance ===
+        "Not sure"
+    ).length;
+
+  const declined =
+    firebaseResponses.filter(
+      attendee =>
+        attendee.attendance ===
+        "Not attending"
+    ).length;
+
+  rsvpStats.innerHTML = "";
+
+  const stats = [
+    `Responses: ${firebaseResponses.length}`,
+    `Attending: ${attending}`,
+    `Not sure: ${unsure}`,
+    `Declined: ${declined}`
+  ];
+
+  stats.forEach(value => {
+    const stat =
+      document.createElement(
+        "span"
+      );
+
+    stat.className =
+      "rsvp-stat";
+
+    stat.textContent =
+      value;
+
+    rsvpStats.appendChild(
+      stat
+    );
+  });
 };
 
 const renderList = () => {
@@ -221,251 +441,268 @@ const renderList = () => {
   if (!attendees.length) {
     rsvpList.innerHTML = `
       <p class="rsvp-list__empty">
-        No attendees found.
+        No RSVP records found.
       </p>
     `;
 
     return;
   }
 
-  ROLE_ORDER.forEach(
-    role => {
-      const roleAttendees =
-        attendees.filter(
-          attendee =>
-            attendee.role === role
-        );
-
-      if (
-        !roleAttendees.length
-      ) {
-        return;
-      }
-
-      const group =
-        document.createElement(
-          "section"
-        );
-
-      group.className =
-        "rsvp-list__role";
-
-      const title =
-        document.createElement(
-          "h2"
-        );
-
-      title.className =
-        "rsvp-list__role-title";
-
-      title.textContent =
-        `${role} (${roleAttendees.length})`;
-
-      group.appendChild(
-        title
+  ROLE_ORDER.forEach(roleName => {
+    const roleAttendees =
+      attendees.filter(
+        attendee =>
+          attendeeBelongsToRole(
+            attendee,
+            roleName
+          )
       );
 
-      roleAttendees.forEach(
-        attendee => {
-          const item =
-            document.createElement(
-              "div"
-            );
+    if (
+      !roleAttendees.length
+    ) {
+      return;
+    }
 
-          item.className =
-            "rsvp-list__item";
+    const group =
+      document.createElement(
+        "section"
+      );
 
-          const name =
+    group.className =
+      "rsvp-list__group";
+
+    const title =
+      document.createElement(
+        "h2"
+      );
+
+    title.className =
+      "rsvp-list__group-title";
+
+    title.textContent =
+      `${roleName} (${roleAttendees.length})`;
+
+    group.appendChild(
+      title
+    );
+
+    roleAttendees.forEach(
+      attendee => {
+        const item =
+          document.createElement(
+            "div"
+          );
+
+        item.className =
+          "rsvp-list__item";
+
+        const name =
+          document.createElement(
+            "span"
+          );
+
+        name.className =
+          "rsvp-list__name";
+
+        name.textContent =
+          attendee.fullName ||
+          attendee.displayName;
+
+        const role =
+          document.createElement(
+            "span"
+          );
+
+        role.className =
+          "rsvp-list__role";
+
+        role.textContent =
+          roleName;
+
+        const status =
+          document.createElement(
+            "span"
+          );
+
+        status.className =
+          `rsvp-list__status rsvp-list__status--${getStatusClass(
+            attendee.attendance
+          )}`;
+
+        status.textContent =
+          attendee.attendance;
+
+        const source =
+          document.createElement(
+            "span"
+          );
+
+        source.className =
+          "rsvp-list__source";
+
+        source.textContent =
+          attendee.isStatic
+            ? "Static"
+            : "RSVP";
+
+        const action =
+          document.createElement(
+            "div"
+          );
+
+        if (
+          attendee.isStatic
+        ) {
+          const staticLabel =
             document.createElement(
               "span"
             );
 
-          name.className =
-            "rsvp-list__name";
-
-          name.textContent =
-            attendee.displayName;
-
-          const roleElement =
-            document.createElement(
-              "span"
-            );
-
-          roleElement.textContent =
-            attendee.role;
-
-          const source =
-            document.createElement(
-              "span"
-            );
-
-          source.className =
+          staticLabel.className =
             "rsvp-list__source";
 
-          source.textContent =
-            attendee.isStatic
-              ? "Static"
-              : "Firebase";
+          staticLabel.textContent =
+            "Edit JS";
 
-          const action =
+          action.appendChild(
+            staticLabel
+          );
+        } else {
+          const deleteButton =
             document.createElement(
-              "div"
+              "button"
             );
 
-          if (
-            attendee.isStatic
-          ) {
-            const staticText =
-              document.createElement(
-                "span"
+          deleteButton.type =
+            "button";
+
+          deleteButton.className =
+            "delete-button";
+
+          deleteButton.textContent =
+            "Delete";
+
+          deleteButton.addEventListener(
+            "click",
+            () => {
+              deleteAttendee(
+                attendee,
+                deleteButton
               );
-
-            staticText.className =
-              "rsvp-list__source";
-
-            staticText.textContent =
-              "Edit JS";
-
-            action.appendChild(
-              staticText
-            );
-          } else {
-            const deleteButton =
-              document.createElement(
-                "button"
-              );
-
-            deleteButton.type =
-              "button";
-
-            deleteButton.className =
-              "delete-button";
-
-            deleteButton.textContent =
-              "Delete";
-
-            deleteButton.addEventListener(
-              "click",
-              () => {
-                deleteAttendee(
-                  attendee,
-                  deleteButton
-                );
-              }
-            );
-
-            action.appendChild(
-              deleteButton
-            );
-          }
-
-          item.appendChild(
-            name
+            }
           );
 
-          item.appendChild(
-            roleElement
-          );
-
-          item.appendChild(
-            source
-          );
-
-          item.appendChild(
-            action
-          );
-
-          group.appendChild(
-            item
+          action.appendChild(
+            deleteButton
           );
         }
-      );
 
-      rsvpList.appendChild(
-        group
-      );
-    }
-  );
+        item.appendChild(
+          name
+        );
+
+        item.appendChild(
+          role
+        );
+
+        item.appendChild(
+          status
+        );
+
+        item.appendChild(
+          source
+        );
+
+        item.appendChild(
+          action
+        );
+
+        group.appendChild(
+          item
+        );
+      }
+    );
+
+    rsvpList.appendChild(
+      group
+    );
+  });
+
+  renderStats();
 };
 
-const loadAttendees =
-  async () => {
-    if (rsvpList) {
-      rsvpList.innerHTML = `
-        <p class="rsvp-list__loading">
-          Loading RSVP list...
-        </p>
-      `;
-    }
+const loadAttendees = async () => {
+  if (!rsvpList) {
+    return;
+  }
 
-    try {
-      const attendeesQuery =
-        query(
-          collection(
-            db,
-            "publicAttendees"
-          ),
-          orderBy(
-            "submittedAt",
-            "asc"
-          )
-        );
+  rsvpList.innerHTML = `
+    <p class="rsvp-list__loading">
+      Loading RSVP list...
+    </p>
+  `;
 
-      const snapshot =
-        await getDocs(
-          attendeesQuery
-        );
+  exportMessage.textContent =
+    "";
 
-      const firebaseAttendees =
-        snapshot.docs.map(
-          documentSnapshot => {
-            const data =
-              documentSnapshot.data();
+  try {
+    const [
+      attending,
+      unsure,
+      declined
+    ] = await Promise.all([
+      getCollectionData(
+        "rsvps",
+        "Attending"
+      ),
 
-            return {
-              id:
-                documentSnapshot.id,
+      getCollectionData(
+        "unsureRsvps",
+        "Not sure"
+      ),
 
-              displayName:
-                data.displayName,
+      getCollectionData(
+        "declinedRsvps",
+        "Not attending"
+      )
+    ]);
 
-              role:
-                data.role,
+    attendees =
+      sortAttendees([
+        ...attending,
+        ...unsure,
+        ...declined,
+        ...STATIC_ATTENDEES
+      ]);
 
-              isStatic:
-                false
-            };
-          }
-        );
+    renderList();
 
-      attendees =
-        sortAttendees([
-          ...firebaseAttendees,
-          ...STATIC_ATTENDEES
-        ]);
+    const responseCount =
+      attending.length +
+      unsure.length +
+      declined.length;
 
-      renderList();
+    exportMessage.textContent =
+      `${responseCount} RSVP responses loaded.`;
 
-      exportMessage.textContent =
-        `${firebaseAttendees.length} confirmed RSVP responses found.`;
+  } catch (error) {
+    console.error(
+      "Unable to load RSVP data:",
+      error
+    );
 
-    } catch (error) {
-      console.error(
-        "Unable to load RSVP list:",
-        error
+    attendees =
+      sortAttendees(
+        STATIC_ATTENDEES
       );
 
-      exportMessage.textContent =
-        "Unable to load RSVP list.";
+    renderList();
 
-      attendees =
-        sortAttendees(
-          STATIC_ATTENDEES
-        );
-
-      renderList();
-    }
-  };
+    exportMessage.textContent =
+      "Unable to load RSVP responses.";
+  }
+};
 
 const deleteAttendee =
   async (
@@ -474,7 +711,7 @@ const deleteAttendee =
   ) => {
     const confirmed =
       window.confirm(
-        `Delete ${attendee.displayName} from the RSVP list?\n\nThis will also allow this person to submit their RSVP again.`
+        `Delete ${attendee.fullName}?\n\nThis removes their RSVP and allows the same name to submit again.`
       );
 
     if (!confirmed) {
@@ -491,10 +728,16 @@ const deleteAttendee =
       const batch =
         writeBatch(db);
 
+      /*
+       * Delete every possible RSVP
+       * record with this name hash.
+       * Non-existing documents are fine.
+       */
+
       batch.delete(
         doc(
           db,
-          "publicAttendees",
+          "rsvps",
           attendee.id
         )
       );
@@ -502,7 +745,23 @@ const deleteAttendee =
       batch.delete(
         doc(
           db,
-          "rsvps",
+          "unsureRsvps",
+          attendee.id
+        )
+      );
+
+      batch.delete(
+        doc(
+          db,
+          "declinedRsvps",
+          attendee.id
+        )
+      );
+
+      batch.delete(
+        doc(
+          db,
+          "publicAttendees",
           attendee.id
         )
       );
@@ -520,17 +779,15 @@ const deleteAttendee =
       attendees =
         attendees.filter(
           currentAttendee =>
-            !(
-              !currentAttendee.isStatic &&
-              currentAttendee.id ===
-                attendee.id
-            )
+            currentAttendee.isStatic ||
+            currentAttendee.id !==
+              attendee.id
         );
 
       renderList();
 
       exportMessage.textContent =
-        `${attendee.displayName} was removed from the RSVP list.`;
+        `${attendee.fullName} was deleted successfully.`;
 
     } catch (error) {
       console.error(
@@ -549,20 +806,50 @@ const deleteAttendee =
     }
   };
 
+const escapeCsv = value => {
+  const text =
+    String(
+      value ?? ""
+    );
+
+  return `"${text.replaceAll(
+    '"',
+    '""'
+  )}"`;
+};
+
 const createCsv = () => {
   const rows = [
     [
-      "Role",
-      "Name",
+      "Full Name",
+      "Primary Role",
+      "Categories",
+      "Response",
       "Source"
     ]
   ];
 
   attendees.forEach(
     attendee => {
+      const categories =
+        Array.isArray(
+          attendee.categories
+        )
+          ? attendee.categories.join(
+              ", "
+            )
+          : attendee.role;
+
       rows.push([
+        attendee.fullName ||
+          attendee.displayName,
+
         attendee.role,
-        attendee.displayName,
+
+        categories,
+
+        attendee.attendance,
+
         attendee.isStatic
           ? "Static"
           : "RSVP"
@@ -582,6 +869,13 @@ const createCsv = () => {
 };
 
 const downloadCsv = () => {
+  if (!attendees.length) {
+    exportMessage.textContent =
+      "There is no RSVP data to download.";
+
+    return;
+  }
+
   const csv =
     createCsv();
 
@@ -621,8 +915,13 @@ const downloadCsv = () => {
 
   link.remove();
 
-  URL.revokeObjectURL(
-    url
+  window.setTimeout(
+    () => {
+      URL.revokeObjectURL(
+        url
+      );
+    },
+    1000
   );
 };
 
