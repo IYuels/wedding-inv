@@ -10,6 +10,48 @@ import {
 
 import { firebaseConfig } from "./firebase-config.js";
 
+const loadVenueSection = async () => {
+  const venueSection =
+    document.querySelector(
+      "#venueSection"
+    );
+
+  if (!venueSection) {
+    return;
+  }
+
+  try {
+    const response =
+      await fetch(
+        "/sections/venue.html"
+      );
+
+    if (!response.ok) {
+      throw new Error(
+        `Failed to load venue section: ${response.status}`
+      );
+    }
+
+    const html =
+      await response.text();
+
+    venueSection.innerHTML =
+      html;
+
+    document.dispatchEvent(
+      new CustomEvent(
+        "weddingSectionsLoaded"
+      )
+    );
+
+  } catch (error) {
+    console.error(
+      "Unable to load venue section:",
+      error
+    );
+  }
+};
+
 const STATIC_ATTENDEES = [
   {
     displayName: "R. Espinosa",
