@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>RSVP Manager</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 40px 20px;
+      background: #f4f1e8;
+      color: #304f40;
+      font-family: Arial, sans-serif;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .rsvp-manager {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .rsvp-manager__header {
+      margin-bottom: 30px;
+      padding: 30px;
+      border-radius: 14px;
+      background: #fff;
+      box-shadow:
+        0 15px 40px
+        rgba(0, 0, 0, 0.06);
+    }
+
+    .rsvp-manager__header h1 {
+      margin: 0 0 10px;
+    }
+
+    .rsvp-manager__header p {
+      margin: 0 0 20px;
+      line-height: 1.5;
+    }
+
+    .rsvp-manager__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .button {
+      border: 0;
+      border-radius: 100px;
+      padding: 11px 20px;
+      background: #496957;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .button--secondary {
+      background: #8b725c;
+    }
+
+    .rsvp-message {
+      margin: 15px 0 0;
+      font-size: 14px;
+    }
+
+    .rsvp-list {
+      overflow: hidden;
+      border-radius: 14px;
+      background: #fff;
+      box-shadow:
+        0 15px 40px
+        rgba(0, 0, 0, 0.06);
+    }
+
+    .rsvp-list__heading {
+      display: grid;
+      grid-template-columns:
+        minmax(0, 1fr)
+        180px
+        120px
+        100px;
+      gap: 20px;
+      padding: 16px 20px;
+      background: #304f40;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .rsvp-list__role {
+      border-bottom:
+        1px solid #e8e2d7;
+    }
+
+    .rsvp-list__role-title {
+      margin: 0;
+      padding: 18px 20px 8px;
+      color: #8b725c;
+      font-size: 18px;
+    }
+
+    .rsvp-list__item {
+      display: grid;
+      grid-template-columns:
+        minmax(0, 1fr)
+        180px
+        120px
+        100px;
+      gap: 20px;
+      align-items: center;
+      padding: 13px 20px;
+    }
+
+    .rsvp-list__item + .rsvp-list__item {
+      border-top:
+        1px solid #f0ece4;
+    }
+
+    .rsvp-list__name {
+      font-weight: 600;
+    }
+
+    .rsvp-list__status {
+      color: #496957;
+      font-size: 14px;
+    }
+
+    .rsvp-list__source {
+      color: #777;
+      font-size: 13px;
+    }
+
+    .delete-button {
+      border:
+        1px solid #b85b5b;
+      border-radius: 100px;
+      padding: 7px 12px;
+      background: transparent;
+      color: #a54646;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .delete-button:hover {
+      background: #a54646;
+      color: #fff;
+    }
+
+    .delete-button:disabled {
+      border-color: #ccc;
+      color: #aaa;
+      cursor: not-allowed;
+    }
+
+    .rsvp-list__loading,
+    .rsvp-list__empty {
+      margin: 0;
+      padding: 30px;
+      text-align: center;
+    }
+
+    @media (max-width: 700px) {
+      .rsvp-list__heading {
+        display: none;
+      }
+
+      .rsvp-list__item {
+        grid-template-columns:
+          1fr auto;
+        gap: 8px 15px;
+      }
+
+      .rsvp-list__name {
+        grid-column: 1;
+      }
+
+      .rsvp-list__status,
+      .rsvp-list__source {
+        grid-column: 1;
+      }
+
+      .delete-button {
+        grid-column: 2;
+        grid-row: 1 / span 3;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="rsvp-manager">
+
+    <div class="rsvp-manager__header">
+      <h1>
+        RSVP Manager
+      </h1>
+
+      <p>
+        View, download, and manage the confirmed attendance list.
+      </p>
+
+      <div class="rsvp-manager__actions">
+
+        <button
+          type="button"
+          class="button"
+          id="downloadRsvp"
+        >
+          Download RSVP List
+        </button>
+
+        <button
+          type="button"
+          class="button button--secondary"
+          id="refreshRsvp"
+        >
+          Refresh List
+        </button>
+
+      </div>
+
+      <p
+        class="rsvp-message"
+        id="exportMessage"
+      ></p>
+    </div>
+
+    <div class="rsvp-list">
+
+      <div class="rsvp-list__heading">
+        <span>Name</span>
+        <span>Role</span>
+        <span>Source</span>
+        <span>Action</span>
+      </div>
+
+      <div id="rsvpList">
+        <p class="rsvp-list__loading">
+          Loading RSVP list...
+        </p>
+      </div>
+
+    </div>
+
+  </main>
+
+  <script
+    type="module"
+    src="/js/rsvp-export.js"
+  ></script>
+
+</body>
+</html>
